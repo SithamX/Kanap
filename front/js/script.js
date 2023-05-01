@@ -15,7 +15,8 @@ async function data(){
 
     // Création d'une balise a telle que dans l'exemple dans le fichier html
     const aElement = document.createElement("a");
-      
+    aElement.href = `./product.html?id=${article._id}`; // Dois-je mettre cette ligne après la création de la balise <article> malgré que ça fonctionne en faisant les choses comme cela ?
+
     // Création d'une balise article telle que dans l'exemple dans le fichier html 
     const articleElement = document.createElement("article");
 
@@ -42,3 +43,11 @@ async function data(){
 }
 // Appel de la fonction permettant de l'executer
 data();
+
+/* <!-- <a href="./product.html?id=42">
+            <article>
+              <img src="../../back/images/kanap01.jpeg" alt="Lorem ipsum dolor sit amet, Kanap name1">
+              <h3 class="productName">Kanap name1</h3>
+              <p class="productDescription">Dis enim malesuada risus sapien gravida nulla nisl arcu. Dis enim malesuada risus sapien gravida nulla nisl arcu.</p>
+            </article>
+          </a> --> */
