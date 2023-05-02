@@ -1,34 +1,34 @@
 // RECUPERATION ET AFFICHAGE DES DONNEES DE L'API //
 
-// Récupération des élément de l'API
+// Récupération des éléments de l'API
 fetch("http://localhost:3000/api/products")
-.then(products => products.json())
-.then(dataProducts => data(dataProducts))
-.catch(error => console.log(error));
-console.log(products);
+  .then(response => response.json())
+  .then(products => dataProducts(products))
+  .catch(error => console.log(error));
+  console.log (response);
 
-function data(dataProducts){
+function dataProducts(products){
   // Création d'une boucle for dans la fonction pour permettre d'afficher plusieurs produits avec cette mise en forme plutôt qu'un seul produit et pour permettre de faire référence à la constant "products" qui ne peut être appélée en dehors de la fonction dans laquelle elle à été créée
-  for (let article of dataProducts) { // j'ai créé une fonction et ai mis entre panrenthèses "products" pour pouvoir accéder à la constante products dans la fonction d'au-dessus, puisque les constantes dans les  fonctions sont impossible à y faire référence si je laisse toutes ces autres constantes en dehors de la nouvelle fonction en supprimant la fonction
+  for (let product of products) { // j'ai créé une fonction et ai mis entre panrenthèses "products" pour pouvoir accéder à la constante products dans la fonction d'au-dessus, puisque les constantes dans les  fonctions sont impossible à y faire référence si je laisse toutes ces autres constantes en dehors de la nouvelle fonction en supprimant la fonction
     
     // Récupération de lélément du DOM qui acceuillera les items
     document.querySelector(".items").insertAdjacentHTML(
       // Position à l'intérieur de l'élément, après son dernier enfant
       "beforeend",
       // Création des balises produits
-      `<a href="./product.html?id=${article._id}">
-            <article>
-              <img src="${article.imageUrl}" alt="${article.altTxt}">
-              <h3 class="productName">${article.name}</h3>
-              <p class="productDescription">${article.description}</p>
-            </article>
-          </a>`
+      `<a href="./product.html?id=${product._id}">
+          <article>
+            <img src="${product.imageUrl}" alt="${product.altTxt}">
+            <h3 class="productName">${product.name}</h3>
+            <p class="productDescription">${product.description}</p>
+          </article>
+        </a>`
     )
     
   }
 }
-//Appel de la fonction permettant de l'executer
-data();
+//Il n'y à pas besoin d'appeler la fonction pour l'executer, d'ailleurs si je le fais, j'aurai un message d'erreur dans la console
+
 
 /* <!-- <a href="./product.html?id=42">
             <article>
