@@ -3,11 +3,30 @@ const urlParams = new URLSearchParams(window.location.search);
 const urlId = urlParams.get('id'); // affiche la valeur du paramètre 'param1'
 console.log (urlId);
 
+fetch(`http://localhost:3000/api/products/${urlId}`)
+  .then(response => response.json())
+  .then(product => data(product))
+  .catch(error => console.log(error));
 
 
-async function data(){
+
+function data(product){
+    // Récupération de lélément du DOM qui acceuillera les items
+    document.querySelector(".item__img").insertAdjacentHTML(
+      // Position à l'intérieur de l'élément, après son dernier enfant
+      "beforeend",
+      // Création des balises produits
+      `<img src="${product.imageUrl}" alt="Photographie d'un canapé">` 
+      )
+}
+
+
+
+
+
+/*async function data(){
   // Récupération des élément dans l'API
-  const ressource = await fetch (`http://localhost:3000/api/products/${urlId}`);
+  const ressource = await fetch(`http://localhost:3000/api/products/${urlId}`);
   const product = await ressource.json();
   console.log(product);
     
@@ -25,11 +44,30 @@ async function data(){
   console.log(divImage);
 }
 // Appel de la fonction permettant de l'executer
-data();
+data();*/
 
 
 
 
+
+
+
+
+/*async function data(){
+  // Récupération des élément dans l'API
+  const ressource = await fetch(`http://localhost:3000/api/products/${urlId}`);
+  const product = await ressource.json();
+  console.log(product);
+    
+  // Récupération de lélément du DOM qui acceuillera les items
+ document.querySelector(".item__img").insertAdjacentHTML(
+      // Position à l'intérieur de l'élément, après son dernier enfant
+      "beforeend",
+      // Création des balises produits
+      `<img src="${product.imageUrl}" alt="Photographie d'un canapé">` )
+}
+// Appel de la fonction permettant de l'executer
+data();*/
 
 
 
