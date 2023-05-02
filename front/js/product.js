@@ -16,8 +16,39 @@ function data(product){
       // Position à l'intérieur de l'élément, après son dernier enfant
       "beforeend",
       // Création des balises produits
-      `<img src="${product.imageUrl}" alt="Photographie d'un canapé">` 
+      `<img src="${product.imageUrl}" alt="${product.altTxt}">` 
       )
+      // Récupération de lélément du DOM qui acceuillera les items
+    document.querySelector("#title").insertAdjacentHTML(
+      // Position à l'intérieur de l'élément, après son dernier enfant
+      "beforeend",
+      // Création des balises produits
+      `${product.name}` 
+      )
+      // Récupération de lélément du DOM qui acceuillera les items
+    document.querySelector("#price").insertAdjacentHTML(
+      // Position à l'intérieur de l'élément, après son dernier enfant
+      "beforeend",
+      // Création des balises produits
+      `${product.price}` 
+      )
+        // Récupération de lélément du DOM qui acceuillera les items
+    document.querySelector("#description").insertAdjacentHTML(
+      // Position à l'intérieur de l'élément, après son dernier enfant
+      "beforeend",
+      // Création des balises produits
+      `${product.description}` 
+      )
+      // Récupération de lélément du DOM qui acceuillera les items
+      for (let i in colors) {
+        const color = colors[i];
+        document.querySelector("#colors").insertAdjacentHTML(
+          // Position à l'intérieur de l'élément, après son dernier enfant
+          "beforeend",
+          // Création des balises produits
+          `<option value="${color.colors}">${color.colors}</option>`
+          )
+      }
 }
 
 

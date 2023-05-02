@@ -24,7 +24,6 @@ function dataProducts(products){
           </article>
         </a>`
     )
-    
   }
 }
 //Il n'y à pas besoin d'appeler la fonction pour l'executer, d'ailleurs si je le fais, j'aurai un message d'erreur dans la console
