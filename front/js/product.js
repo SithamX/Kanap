@@ -40,13 +40,12 @@ function data(product){
       `${product.description}` 
       )
       // Récupération de lélément du DOM qui acceuillera les items
-      for (let i in colors) {
-        const color = colors[i];
+      for (let color in product.colors) {
         document.querySelector("#colors").insertAdjacentHTML(
           // Position à l'intérieur de l'élément, après son dernier enfant
           "beforeend",
           // Création des balises produits
-          `<option value="${color.colors}">${color.colors}</option>`
+          `<option value="${product.colors[color]}">${product.colors[color]}</option>`
           )
       }
 }
