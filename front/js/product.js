@@ -3,48 +3,52 @@ const urlParams = new URLSearchParams(window.location.search);
 const urlId = urlParams.get('id'); // affiche la valeur du paramètre 'param1'
 console.log (urlId);
 
+// Récupération des propriétés et des valeurs d'un élément en fonction de son ID
 fetch(`http://localhost:3000/api/products/${urlId}`)
   .then(response => response.json())
   .then(product => data(product))
   .catch(error => console.log(error));
 
-
-
+// Création d'une fonction permettant d'afficher les valeurs d'un produit sur la page
 function data(product){
-    // Récupération de lélément du DOM qui acceuillera les items
+    // Récupération de l'élément du DOM qui acceuillera l'item
     document.querySelector(".item__img").insertAdjacentHTML(
       // Position à l'intérieur de l'élément, après son dernier enfant
       "beforeend",
-      // Création des balises produits
+      // Création et ajout d'une image dans la balise image
       `<img src="${product.imageUrl}" alt="${product.altTxt}">` 
       )
-      // Récupération de lélément du DOM qui acceuillera les items
+
+    // Récupération de l'élément du DOM qui acceuillera l'item
     document.querySelector("#title").insertAdjacentHTML(
       // Position à l'intérieur de l'élément, après son dernier enfant
       "beforeend",
-      // Création des balises produits
+      // Ajout du nom du produit dans la balise sélectionnée 
       `${product.name}` 
       )
-      // Récupération de lélément du DOM qui acceuillera les items
+
+    // Récupération de l'élément du DOM qui acceuillera l'item
     document.querySelector("#price").insertAdjacentHTML(
       // Position à l'intérieur de l'élément, après son dernier enfant
       "beforeend",
-      // Création des balises produits
+      // Ajout du prix du produit dans la balise sélectionnée
       `${product.price}` 
       )
-        // Récupération de lélément du DOM qui acceuillera les items
+
+    // Récupération de l'élément du DOM qui acceuillera l'item
     document.querySelector("#description").insertAdjacentHTML(
       // Position à l'intérieur de l'élément, après son dernier enfant
       "beforeend",
-      // Création des balises produits
+      // Ajout de la description du produit dans la balise sélectionnée 
       `${product.description}` 
       )
-      // Récupération de lélément du DOM qui acceuillera les items
+      // Récupération de l'élément du DOM qui acceuillera l'item
+      // Création d'une boucle for permettant d'ajouter les différentes couleurs du tableau json
       for (let color in product.colors) {
         document.querySelector("#colors").insertAdjacentHTML(
           // Position à l'intérieur de l'élément, après son dernier enfant
           "beforeend",
-          // Création des balises produits
+          // Création et ajout des couleurs dans la balise option
           `<option value="${product.colors[color]}">${product.colors[color]}</option>`
           )
       }

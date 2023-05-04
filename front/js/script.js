@@ -11,7 +11,7 @@ function dataProducts(products){
   // Création d'une boucle for dans la fonction pour permettre d'afficher plusieurs produits avec cette mise en forme plutôt qu'un seul produit et pour permettre de faire référence à la constant "products" qui ne peut être appélée en dehors de la fonction dans laquelle elle à été créée
   for (let product of products) { // j'ai créé une fonction et ai mis entre panrenthèses "products" pour pouvoir accéder à la constante products dans la fonction d'au-dessus, puisque les constantes dans les  fonctions sont impossible à y faire référence si je laisse toutes ces autres constantes en dehors de la nouvelle fonction en supprimant la fonction
     
-    // Récupération de lélément du DOM qui acceuillera les items
+    // Récupération de l'élément du DOM qui acceuillera les items
     document.querySelector(".items").insertAdjacentHTML(
       // Position à l'intérieur de l'élément, après son dernier enfant
       "beforeend",
