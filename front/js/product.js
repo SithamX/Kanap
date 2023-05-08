@@ -5,9 +5,9 @@ console.log (urlId);
 
 // Récupération des propriétés et des valeurs d'un élément en fonction de son ID
 fetch(`http://localhost:3000/api/products/${urlId}`)
-  .then(response => response.json())
-  .then(product => data(product))
-  .catch(error => console.log(error));
+    .then(response => response.json())
+    .then(product => data(product))
+    .catch(error => console.log(error));
 
 // Création d'une fonction permettant d'afficher les valeurs d'un produit sur la page
 function data(product){
@@ -54,6 +54,46 @@ function data(product){
       }
 }
 
+// Mais c'est trop bien les focntions en fait, puisque si tu veux créer 
+// une constante pour faire un truc à un moment et en créer une autre pour 
+// faire quelque chose d'autre mais en voulant utiliser le même nom, ben en mettant 
+// ça dans deux fonctions différentes, tu n'auras pas dee problème puisqu'une fonction 
+// dans une constante ne peut pas être récupérer en dehors de celle-ci
+//Par exemple la constante id
+
+function ajoutSelectionPanier(){
+  const productSelection = document.querySelector("#addToCart");
+  // Appel de la fonction ajoutSelectionPanier après un clique 
+  productSelection.addEventListener("click", (event) => {
+    const color = document.querySelector("#colors").value; // .value ça veut dire que l'on sélectionne la valeur sélectionnée, donc la couleur choisie
+    const quantity = document.querySelector("#quantity").value;
+    if (color == 0 || quantity == 0) {
+      alert("Veuillez choisir une couleur et une quantité.")
+    } else {
+      const data = {
+        id: urlId,
+        color: color,
+        quantity: quantity
+      }
+      const dataJson = JSON.stringify(data);
+      localStorage.setItem("data", dataJson); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
+      window.location.href = "cart.html";
+    }
+  });
+}
+ajoutSelectionPanier()
+
+
+
+/*function ajoutSelectionPanier(){
+    const productSelection = document.querySelector("#addToCart");
+    // Appel de la fonction ajoutSelectionPanier après un clique 
+    productSelection.addEventListener("click", function (event) {
+      const id = event.target.dataset.userId;
+      fetch(`http://localhost:3000/api/products/${urlId}/panier`);
+    });
+
+}*/
 
 
 
