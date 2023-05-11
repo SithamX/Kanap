@@ -61,27 +61,72 @@ function data(product){
 // dans une constante ne peut pas être récupérer en dehors de celle-ci
 //Par exemple la constante id
 
-function ajoutSelectionPanier(){
+// Création d'une fonction permettant d'ajouter un article au panier
+function addSelectionCart(){
   const productSelection = document.querySelector("#addToCart");
+
   // Appel de la fonction ajoutSelectionPanier après un clique 
-  productSelection.addEventListener("click", (event) => {
-    const color = document.querySelector("#colors").value; // .value ça veut dire que l'on sélectionne la valeur sélectionnée, donc la couleur choisie
+  productSelection.addEventListener("click", () => {
+    const color = document.querySelector("#colors").value; // .value ça veut dire que l'on sélectionne la valeur selectionnée, donc la couleur choisie
     const quantity = document.querySelector("#quantity").value;
+
     if (color == 0 || quantity == 0) {
-      alert("Veuillez choisir une couleur et une quantité.")
+      alert("Veuillez choisir une couleur et une quantité.");
+      return;
+    } else if (quantity < 0 || quantity > 100) {
+     alert("Veuillez choisir une quantitée entre 1 et 100.");
+     return;
     } else {
-      const data = {
-        id: urlId,
-        color: color,
-        quantity: quantity
-      }
-      const dataJson = JSON.stringify(data);
-      localStorage.setItem("data", dataJson); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
       window.location.href = "cart.html";
     }
+
+    // Enregistrements de certaines valeurs dans une constante
+    const cartSelection = {
+      id: urlId,
+      color: color,
+      quantity: Number(quantity)
+    }
+
+    // Création d'une variable permettant de récupérer les donées stockées dans le localStorage quant il y en aura
+    let localStorageParse = JSON.parse(localStorage.getItem("cart"));
+
+    if (localStorageParse) {
+      let item = localStorageParse.find((item) => item.id == cartSelection.id && item.color == cartSelection.color);
+    
+      if (item) {
+        item.quantity = item.quantity + cartSelection.quantity;
+        localStorage.setItem("cart", JSON.stringify(localStorageParse));
+        return;
+      }
+
+      localStorageParse.push(cartSelection);
+      localStorage.setItem("cart", JSON.stringify(localStorageParse));
+      return;
+    } 
+
+     else {
+      let cart = [];
+      cart.push(cartSelection);
+      localStorage.setItem("cart", JSON.stringify(cart)); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
+    }
+    /*const losto = localStorage.length;
+    if (losto = 1) {
+      localStorage.clear();
+    } */
+   /* const local = localStorage.length;
+    if (local > 0) {
+      localStorage.getItem("cart", JSON.parse);
+      const cart = [];
+        cart.push({
+          id: urlId,
+          color: color,
+          quantity: quantity
+        })
+      localStorage.setItem("cart2", JSON.stringify(cart));
+    }*/
   });
 }
-ajoutSelectionPanier()
+addSelectionCart()
 
 
 
