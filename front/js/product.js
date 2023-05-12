@@ -5,6 +5,7 @@ console.log (urlId);
 
 // Récupération des propriétés et des valeurs d'un élément en fonction de son ID
 fetch(`http://localhost:3000/api/products/${urlId}`)
+
     .then(response => response.json())
     .then(product => data(product))
     .catch(error => console.log(error));
@@ -91,10 +92,10 @@ function addSelectionCart(){
     let localStorageParse = JSON.parse(localStorage.getItem("cart"));
 
     if (localStorageParse) {
-      let item = localStorageParse.find((item) => item.id == cartSelection.id && item.color == cartSelection.color);
+      let product = localStorageParse.find((product) => product.id == cartSelection.id && product.color == cartSelection.color);
     
-      if (item) {
-        item.quantity = item.quantity + cartSelection.quantity;
+      if (product) {
+        product.quantity = product.quantity + cartSelection.quantity;
         localStorage.setItem("cart", JSON.stringify(localStorageParse));
         return;
       }
