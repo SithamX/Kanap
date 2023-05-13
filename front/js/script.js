@@ -5,7 +5,7 @@ fetch("http://localhost:3000/api/products")
   .then(response => response.json())
   .then(products => dataProducts(products))
   .catch(error => console.log(error));
-  console.log (response);
+  //console.log (response);
 
 function dataProducts(products){
   // Création d'une boucle for dans la fonction pour permettre d'afficher plusieurs produits avec cette mise en forme plutôt qu'un seul produit et pour permettre de faire référence à la constant "products" qui ne peut être appélée en dehors de la fonction dans laquelle elle à été créée

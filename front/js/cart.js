@@ -80,12 +80,45 @@ function viewProductsCart(){
                                         </div>
                                     </article>`
                                 )
+
+                        modifyQuantity()
                 });
         }
     }
 }
 viewProductsCart()
 
+
+
+
+function modifyQuantity(){
+    let input = document.querySelector(".itemQuantity");
+    for (let i = 0; i < input.length; i++) {
+        input.addEventListener("change", () => {
+            let test = input.value;
+
+            const idTest = input.closest("article");
+            console.log(idTest)
+           
+
+            const id = idTest.dataset.id;
+            console.log(id)
+            const color = idTest.dataset.color;
+            console.log(color)
+
+            const newQuantity = {
+                id: id,
+                color: color,
+                quantity: Number(test)
+            }
+            
+            let quantity = [];
+            quantity.push(newQuantity);
+            localStorage.setItem("cart", JSON.stringify(quantity)); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
+            console.log(test)
+        });
+    }
+}
 
 /*  <article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
         <div class="cart__item__img">
