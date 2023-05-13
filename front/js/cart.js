@@ -21,45 +21,68 @@ console.log(selectionJson)*/
 
 //console.log(dataCart)s
 
-function viewProductsCart(){
-   
-    for (let product of selectionJson) {
-        console.log(product.id)
-        console.log(product.quantity)
-        console.log(product.color)
-        fetch(`http://localhost:3000/api/products/${product.id}`)
-            .then(response => response.json())
-            .then((prod) => {
-                            console.log(prod.imageUrl)
-                        
-                            document.querySelector("#cart__items").insertAdjacentHTML(
-                                // Position à l'intérieur de l'élément, après son dernier enfant
-                                "afterbegin",
-                                // Création des balises produits
-                                `<article class="cart__item" data-id="${product.id}" data-color="${product.color}">
-                                    <div class="cart__item__img">
-                                        <img src="${prod.imageUrl}" alt="Photographie d'un canapé">
-                                    </div>
-                                    <div class="cart__item__content">
-                                        <div class="cart__item__content__description">
-                                            <h2>${prod.name}</h2>
-                                            <p>${product.color}</p>
-                                            <p>${prod.price}€</p>
-                                        </div>
-                                        <div class="cart__item__content__settings">
-                                            <div class="cart__item__content__settings__quantity">
-                                                <p>Qté : </p>
-                                                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
-                                            </div>
-                                            <iv class="cart__item__content__settings__delete">
-                                                <p class="deleteItem">Supprimer</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>`
-                                )
-            });
+/*if (selectionJson.length == 0) {
+    document.querySelector("#cartAndFormContainer").insertAdjacentHTML(
+        // Position à l'intérieur de l'élément, après son dernier enfant
+        "afterbegin",
+        // Création des balises produits
+        `<h2>Test</h2>`
+        )
+}
+
+if (selectionJson.length === null) {
+            altert("Test");
         }
+        else {*/
+
+function viewProductsCart(){
+    if (selectionJson === null) {
+        document.querySelector("h1").insertAdjacentHTML(
+            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+            "beforeend",
+            // Création des balises produits
+             " est vide."
+            )
+    } 
+    else {
+        for (let product of selectionJson) {
+            console.log(product.id)
+            console.log(product.quantity)
+            console.log(product.color)
+            fetch(`http://localhost:3000/api/products/${product.id}`)
+                .then(response => response.json())
+                .then((prod) => {
+                                console.log(prod.imageUrl)
+                            
+                                document.querySelector("#cart__items").insertAdjacentHTML(
+                                    // Position à l'intérieur de l'élément, après son dernier enfant
+                                    "afterbegin",
+                                    // Création des balises produits
+                                    `<article class="cart__item" data-id="${product.id}" data-color="${product.color}">
+                                        <div class="cart__item__img">
+                                            <img src="${prod.imageUrl}" alt="Photographie d'un canapé">
+                                        </div>
+                                        <div class="cart__item__content">
+                                            <div class="cart__item__content__description">
+                                                <h2>${prod.name}</h2>
+                                                <p>${product.color}</p>
+                                                <p>${prod.price}€</p>
+                                            </div>
+                                            <div class="cart__item__content__settings">
+                                                <div class="cart__item__content__settings__quantity">
+                                                    <p>Qté : </p>
+                                                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+                                                </div>
+                                                <iv class="cart__item__content__settings__delete">
+                                                    <p class="deleteItem">Supprimer</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </article>`
+                                )
+                });
+        }
+    }
 }
 viewProductsCart()
 
