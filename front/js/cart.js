@@ -36,7 +36,7 @@ if (selectionJson.length === null) {
         else {*/
 
 function viewProductsCart(){
-    if (selectionJson === null) {
+    if (selectionJson === null || selectionJson == 0) {
         document.querySelector("h1").insertAdjacentHTML(
             // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
             "beforeend",
@@ -73,7 +73,7 @@ function viewProductsCart(){
                                                     <p>Qté : </p>
                                                     <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
                                                 </div>
-                                                <iv class="cart__item__content__settings__delete">
+                                                <div class="cart__item__content__settings__delete">
                                                     <p class="deleteItem">Supprimer</p>
                                                 </div>
                                             </div>
@@ -81,23 +81,24 @@ function viewProductsCart(){
                                     </article>`
                                 )
 
-                        modifyQuantity()
+                        modifyQuantity();
+                        deleteProduct();
                 });
         }
     }
 }
-viewProductsCart()
+viewProductsCart();
 
 
 
 
 function modifyQuantity(){
-    let input = document.querySelector(".itemQuantity");
-    for (let i = 0; i < input.length; i++) {
-        input.addEventListener("change", () => {
-            let test = input.value;
+    let inputs = document.querySelector(".itemQuantity");
+//  for (let n = 0; n < selectionJson.length; n++) {
+        inputs.addEventListener("change", () => {
+            let test = inputs.value;
 
-            const idTest = input.closest("article");
+            const idTest = inputs.closest("article");
             console.log(idTest)
            
 
@@ -111,14 +112,57 @@ function modifyQuantity(){
                 color: color,
                 quantity: Number(test)
             }
-            
+           
             let quantity = [];
             quantity.push(newQuantity);
             localStorage.setItem("cart", JSON.stringify(quantity)); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
             console.log(test)
         });
-    }
+//  }
 }
+
+function deleteProduct(){
+    let deleteItem = document.querySelector(".deleteItem");
+    cartDelete = [];
+   
+        deleteItem.addEventListener("click", () => {
+            deleteItem.parentElement.style.display = "none";
+
+              
+
+
+                cartDelete = selectionJson;
+
+                cartDelete.splice(0);
+
+                selectionJson = localStorage.setItem("cart", JSON.stringify(cartDelete));
+                location.reload();
+            });
+    
+//  }
+}
+
+/*function deleteProduct(){
+    let deleteItem = document.querySelector(".deleteItem");
+//  for (let n = 0; n < selectionJson.length; n++) {
+    deleteItem.addEventListener("click", () => {
+
+            const idTest = deleteItem.closest("article");
+            console.log(idTest)
+           
+
+            const id = idTest.dataset.id;
+            console.log(id)
+            const color = idTest.dataset.color;
+            console.log(color)
+
+            //const deleteItem = id + color + localStorage.("cart")
+
+            localStorage.removeItem("cart"); 
+            location.reload();
+        });
+//  }
+}*/
 
 /*  <article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
         <div class="cart__item__img">
@@ -135,7 +179,7 @@ function modifyQuantity(){
                     <p>Qté : </p>
                     <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
                 </div>
-                <iv class="cart__item__content__settings__delete">
+                <div class="cart__item__content__settings__delete">
                     <p class="deleteItem">Supprimer</p>
                 </div>
             </div>
