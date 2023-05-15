@@ -80,7 +80,7 @@ function viewProductsCart(){
                                         </div>
                                     </article>`
                                 )
-
+                        totalQuantityPrice();
                         modifyQuantity();
                         deleteProduct();
                 });
@@ -117,30 +117,151 @@ function modifyQuantity(){
             quantity.push(newQuantity);
             localStorage.setItem("cart", JSON.stringify(quantity)); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
             console.log(test)
+            location.reload();
+            totalQuantityPrice();
         });
 //  }
 }
 
 function deleteProduct(){
     let deleteItem = document.querySelector(".deleteItem");
-    cartDelete = [];
-   
+    //let cartDelete = [];
         deleteItem.addEventListener("click", () => {
-            deleteItem.parentElement.style.display = "none";
-
-              
 
 
-                cartDelete = selectionJson;
+            const idTest = deleteItem.closest("article");
+            console.log(idTest)
+           
+
+            const id = idTest.dataset.id;
+            console.log(id)
+            const color = idTest.dataset.color;
+            console.log(color)
+
+            const newQuantity = {
+                id: id,
+                color: color,
+            }
+           
+            let quantity = [];
+            quantity.push(newQuantity);
+
+            quantity.splice(0);
+
+                selectionJson = localStorage.setItem("cart", JSON.stringify(quantity));
+                location.reload();
+            });
+}
+
+
+function totalQuantityPrice(){
+    for (product of selectionJson) {
+        fetch(`http://localhost:3000/api/products/${product.id}`)
+        .then(response => response.json())
+        .then((prod) => {
+
+            const price = product.quantity * prod.price;
+
+            document.querySelector("#totalQuantity").insertAdjacentHTML(
+                // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+                "beforeend",
+                // Création des balises produits
+                `${product.quantity}`
+                )
+            document.querySelector("#totalPrice").insertAdjacentHTML(
+                // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+                "beforeend",
+                // Création des balises produits
+                `${price}` //  `${product.color}`
+            )
+        });
+    }
+}
+
+
+/*function totalQuantityPrice(){
+    console.log(selectionJson)
+    let deleteItem = document.querySelector(".cart__item__content__settings");
+    
+    const idTest = deleteItem.closest('div');
+    console.log(idTest)
+    for (product of selectionJson) {
+
+           
+
+        document.querySelector("#totalQuantity").insertAdjacentHTML(
+            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+            "beforeend",
+            // Création des balises produits
+            `${product.quantity}`
+            )
+            document.querySelector("#totalPrice").insertAdjacentHTML(
+                // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+                "beforeend",
+                // Création des balises produits
+                `${product.price}` //  `${product.color}`
+                )
+    }
+}*/
+
+
+
+
+
+
+/* Premièree méthode pour supprimer :
+
+function deleteProduct(){
+    let deleteItem = document.querySelector(".deleteItem");
+    let cartDelete = [];
+        deleteItem.addEventListener("click", () => {
+
+
+            cartDelete = selectionJson;
+                
 
                 cartDelete.splice(0);
 
                 selectionJson = localStorage.setItem("cart", JSON.stringify(cartDelete));
                 location.reload();
             });
-    
-//  }
+} 
+
+Deuxième méthode :
+
+function deleteProduct(){
+    let deleteItem = document.querySelector(".deleteItem");
+    //let cartDelete = [];
+        deleteItem.addEventListener("click", () => {
+
+
+            const idTest = deleteItem.closest("article");
+            console.log(idTest)
+           
+
+            const id = idTest.dataset.id;
+            console.log(id)
+            const color = idTest.dataset.color;
+            console.log(color)
+
+            const newQuantity = {
+                id: id,
+                color: color,
+            }
+           
+            let quantity = [];
+            quantity.push(newQuantity);
+
+            quantity.splice(0);
+
+                selectionJson = localStorage.setItem("cart", JSON.stringify(quantity));
+                location.reload();
+            });
 }
+*/
+
+
+
 
 /*function deleteProduct(){
     let deleteItem = document.querySelector(".deleteItem");
