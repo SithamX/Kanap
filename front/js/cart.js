@@ -179,6 +179,164 @@ function totalQuantityPrice(){
 }
 
 
+
+
+function order(){
+    const formulaireCommande = document.querySelector("#order");
+    formulaireCommande.addEventListener("click", (event) => {
+        event.preventDefault();
+       
+        const inputId = {
+            firstName: document.querySelector("#firstName").value,
+            lastName: document.querySelector("#lastName").value,
+            address:document.querySelector("#address").value,
+            city: document.querySelector("#city").value,
+            email: document.querySelector("#email").value,
+        };
+        const chargeUtile = localStorage.setItem("commande", JSON.stringify(inputId));
+
+        if (verificationChampsFormualire()) return
+        if (verifyLastName()) return 
+        if (verifyAdress()) return 
+        if (verifyCity()) return 
+        if (verifyEmail()) return
+
+        fetch("http://localhost:3000/api/products/order"), {
+            method: "POST",
+            headers: {"Content-Type": "application.json"},
+            body: chargeUtile
+        }
+        window.location.href = "confirmation.html";
+    });
+}
+order()
+
+/*function testAffichage() {
+    const test = document.querySelector("input")
+    test.addEventListener("click", () => {
+    });
+}*/
+
+
+function verificationChampsFormualire() {
+    const formulaireFirstName = document.querySelector("#firstName").value;
+    const formulaireLastName = document.querySelector("#lastName");
+    const formulaireAddress = document.querySelector("#address");
+    const formulaireCity = document.querySelector("#city");
+    const formulaireEmail = document.querySelector("#email");
+
+    /*let regexFirstName = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
+    if (regexFirstName(formulaireFirstName)) {
+        alert("Problème test")
+    }*/
+    /*formulaireFirstName.addEventListener("change", () => {
+        if (/^@/) {
+            alert("Problème test")
+           // return true;
+        }
+    });*/
+    
+    const regexFirstName = /^([a-zA-Z-]){3,25}$/
+    if (regexFirstName.test(formulaireFirstName) === false) {
+        document.querySelector("#firstNameErrorMsg").insertAdjacentHTML(
+            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+            "beforeend",
+            // Création des balises produits
+            "erreur"
+        )
+        return true
+    }  
+    
+}
+
+function verifyLastName() {
+    const formulaireLastName = document.querySelector("#lastName").value;
+
+    const regexLastName = /^([a-zA-Z-]){3,25}$/
+    if (regexLastName.test(formulaireLastName) === false) {
+        document.querySelector("#lastNameErrorMsg").insertAdjacentHTML(
+            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+            "beforeend",
+            // Création des balises produits
+            "erreur"
+        )
+        return true
+    }  
+}
+
+function verifyAdress() {
+    const formulaireAddress = document.querySelector("#address").value;
+
+    const regexAddress = /^([0-9]{1,} [a-zA-Z-]{5,})$/
+    if (regexAddress.test(formulaireAddress) === false) {
+        document.querySelector("#addressErrorMsg").insertAdjacentHTML(
+            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+            "beforeend",
+            // Création des balises produits
+            "erreur"
+        )
+        return true
+    }  
+}
+
+function verifyCity() {
+    const formulaireCity = document.querySelector("#city").value;
+
+    const regexCity = /^([a-zA-Z-]){2,}$/
+    if (regexCity.test(formulaireCity) === false) {
+        document.querySelector("#cityErrorMsg").insertAdjacentHTML(
+            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+            "beforeend",
+            // Création des balises produits
+            "erreur"
+        )
+        return true
+    }  
+}
+
+
+
+function verifyEmail() {
+    const formulaireEmail = document.querySelector("#email").value;
+
+    const regexEmail = /^([a-zA-Z-_.]{3,}[@]{1}[a-zA-Z]+[.]{1}[com]*[fr]*[net]*[org]*)$/
+    if (regexEmail.test(formulaireEmail) === false) {
+        document.querySelector("#emailErrorMsg").insertAdjacentHTML(
+            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+            "beforeend",
+            // Création des balises produits
+            "erreur"
+        )
+        return true
+    }  
+}
+
+
+
+
+
+
+
+/*  Voyons voir si vous avez bien tout compris ! 
+    Vous allez devoir créer une regex qui permet de vérifier 
+    que le pseudo saisit par l'utilisateur contient bien des chiffres, 
+    des lettres ou des tirets bas, et fait de 6 à 20 caractères de long. 
+    A vos marques, prêts, codez ! */
+
+
+// let regex = /([0-9]+) [a-z] [A-Z] [-] {6, 20}/;
+// correction : let regex = (/^([0-9a-zA-Z_]){6,20}$/)
+
+// regex firstName = (/([a-zA-Z-]){1}/) Amélioré : /^([a-zA-Z-]){3,25}$/
+// regex lastName = (/([a-zA-Z-]){1}/)  Amélioré : /^([a-zA-Z-]){3,35}$/
+// regex address = (/([0-9a-zA-Z-]+)/)  Amélioré : /^([0-9]{1,} [a-zA-Z-]{5,})$/
+// regex city = (/(a-zA-Z-]+)/)         Amélioré : /^([a-zA-Z-]){2,}$/
+// regex email = (/([a-zA-Z-_@.]){1}/)  Amélioré : /^([a-zA-Z-_.]{3,}[@]{1}[a-zA-Z]+[.]{1}[com]*[fr]*[net]*[org]*)$/
+
+
+
+
+
 /*function totalQuantityPrice(){
     console.log(selectionJson)
     let deleteItem = document.querySelector(".cart__item__content__settings");
