@@ -195,7 +195,7 @@ function order(){
         };
         const chargeUtile = localStorage.setItem("commande", JSON.stringify(inputId));
 
-        if (verificationChampsFormualire()) return
+        if (verifyFirstName()) return
         if (verifyLastName()) return 
         if (verifyAdress()) return 
         if (verifyCity()) return 
@@ -211,54 +211,29 @@ function order(){
 }
 order()
 
-/*function testAffichage() {
-    const test = document.querySelector("input")
-    test.addEventListener("click", () => {
-    });
-}*/
-
-
-function verificationChampsFormualire() {
+function verifyFirstName() {
     const formulaireFirstName = document.querySelector("#firstName").value;
-    const formulaireLastName = document.querySelector("#lastName");
-    const formulaireAddress = document.querySelector("#address");
-    const formulaireCity = document.querySelector("#city");
-    const formulaireEmail = document.querySelector("#email");
-
-    /*let regexFirstName = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
-    if (regexFirstName(formulaireFirstName)) {
-        alert("Problème test")
-    }*/
-    /*formulaireFirstName.addEventListener("change", () => {
-        if (/^@/) {
-            alert("Problème test")
-           // return true;
-        }
-    });*/
-    
-    const regexFirstName = /^([a-zA-Z-]){3,25}$/
+    const regexFirstName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ-]){3,25}$/
     if (regexFirstName.test(formulaireFirstName) === false) {
         document.querySelector("#firstNameErrorMsg").insertAdjacentHTML(
             // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
             "beforeend",
             // Création des balises produits
-            "erreur"
+            "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25)."
         )
         return true
     }  
-    
 }
 
 function verifyLastName() {
     const formulaireLastName = document.querySelector("#lastName").value;
-
-    const regexLastName = /^([a-zA-Z-]){3,25}$/
+    const regexLastName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
     if (regexLastName.test(formulaireLastName) === false) {
         document.querySelector("#lastNameErrorMsg").insertAdjacentHTML(
             // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
             "beforeend",
             // Création des balises produits
-            "erreur"
+            "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25)."
         )
         return true
     }  
@@ -266,14 +241,13 @@ function verifyLastName() {
 
 function verifyAdress() {
     const formulaireAddress = document.querySelector("#address").value;
-
-    const regexAddress = /^([0-9]{1,} [a-zA-Z-]{5,})$/
+    const regexAddress = /^([0-9]{1,} [a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]{5,})$/
     if (regexAddress.test(formulaireAddress) === false) {
         document.querySelector("#addressErrorMsg").insertAdjacentHTML(
             // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
             "beforeend",
             // Création des balises produits
-            "erreur"
+            "Veuillez entrer une adresse valide."
         )
         return true
     }  
@@ -281,35 +255,33 @@ function verifyAdress() {
 
 function verifyCity() {
     const formulaireCity = document.querySelector("#city").value;
-
-    const regexCity = /^([a-zA-Z-]){2,}$/
+    const regexCity = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]){2,}$/
     if (regexCity.test(formulaireCity) === false) {
         document.querySelector("#cityErrorMsg").insertAdjacentHTML(
             // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
             "beforeend",
             // Création des balises produits
-            "erreur"
+            "Veuillez entrer un nom de ville valide."
         )
         return true
     }  
 }
 
 
-
 function verifyEmail() {
-    const formulaireEmail = document.querySelector("#email").value;
-
-    const regexEmail = /^([a-zA-Z-_.]{3,}[@]{1}[a-zA-Z]+[.]{1}[com]*[fr]*[net]*[org]*)$/
+    const formulaireEmail = document.querySelector("#email").value;                 
+    const regexEmail = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ_.-]{3,}[@]{1}[a-z]+[.]{1}[a-z]{2,})$/
     if (regexEmail.test(formulaireEmail) === false) {
         document.querySelector("#emailErrorMsg").insertAdjacentHTML(
             // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
             "beforeend",
             // Création des balises produits
-            "erreur"
+            "Veuillez entrer une adresse mail valide."
         )
         return true
     }  
 }
+
 
 
 
@@ -325,13 +297,13 @@ function verifyEmail() {
 
 
 // let regex = /([0-9]+) [a-z] [A-Z] [-] {6, 20}/;
-// correction : let regex = (/^([0-9a-zA-Z_]){6,20}$/)
+// correction : let regex = (/^([0-9a-zA-Z_]){6,20}$/) 
 
-// regex firstName = (/([a-zA-Z-]){1}/) Amélioré : /^([a-zA-Z-]){3,25}$/
-// regex lastName = (/([a-zA-Z-]){1}/)  Amélioré : /^([a-zA-Z-]){3,35}$/
-// regex address = (/([0-9a-zA-Z-]+)/)  Amélioré : /^([0-9]{1,} [a-zA-Z-]{5,})$/
-// regex city = (/(a-zA-Z-]+)/)         Amélioré : /^([a-zA-Z-]){2,}$/
-// regex email = (/([a-zA-Z-_@.]){1}/)  Amélioré : /^([a-zA-Z-_.]{3,}[@]{1}[a-zA-Z]+[.]{1}[com]*[fr]*[net]*[org]*)$/
+// regex firstName = (/([a-zA-Z-]){1}/) Amélioré : /^([a-zA-Z-]){3,25}$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ-]){3,25}$/
+// regex lastName = (/([a-zA-Z-]){1}/)  Amélioré : /^([a-zA-Z-]){3,35}$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,35}$/
+// regex address = (/([0-9a-zA-Z-]+)/)  Amélioré : /^([0-9]{1,} [a-zA-Z-]{5,})$/ nouveau : /^([0-9]{1,} [a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]{5,})$/ 
+// regex city = (/(a-zA-Z-]+)/)         Amélioré : /^([a-zA-Z-]){2,}$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]){2,}$/ 
+// regex email = (/([a-zA-Z-_@.]){1}/)  Amélioré : /^([a-zA-Z-_.]{3,}[@]{1}[a-zA-Z]+[.]{1}[com]*[fr]*[net]*[org]*)$/ ou : /^([a-zA-Z-_.]{3,}[@]{1}[a-z]+[.]{1}[a-z]{2,})*$/ ou : /^([a-zA-Z-_.]{3,}[@]{1}[a-zA-Z]+[.]{1})([com]{3})*([fr]{2})*([net]{3})*([org]{3})*$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ_.-]{3,}[@]{1}[a-z]+[.]{1}[a-z]{2,})$/     
 
 
 
