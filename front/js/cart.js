@@ -21,6 +21,9 @@ function viewProductsCart(){
                 .then(response => response.json())
                 .then((prod) => {
                                 console.log(prod.imageUrl)
+
+                                // Création du tableau des produits à envoyer au serveur 
+                                products.push(product.id); // je crois que ça ne sert à rien puisque même en le retirant j'ai quand-même l'id qui s'affiche dans l'url de la page de confirmation
                             
                                 document.querySelector("#cart__items").insertAdjacentHTML(
                                     // Position à l'intérieur de l'élément, après son dernier enfant
@@ -62,8 +65,11 @@ viewProductsCart();
 
 function modifyQuantity(){
     let inputs = document.querySelector(".itemQuantity");
-//  for (let n = 0; n < selectionJson.length; n++) {
-        inputs.addEventListener("change", () => {
+//  for (let n = 0; n < inputs.length; n++) {
+  //  for (let i = 0; i < inputs.length; i++) {
+        inputs.addEventListener("change", (event) => {
+            event.preventDefault();
+            document.querySelector(".itemQuantity")
             let test = inputs.value;
 
             const idTest = inputs.closest("article");
@@ -123,7 +129,7 @@ function deleteProduct(){
 
 
 function totalQuantityPrice(){
-    for (product of selectionJson) {
+    for (let product of selectionJson) {
         fetch(`http://localhost:3000/api/products/${product.id}`)
         .then(response => response.json())
         .then((prod) => {
@@ -146,15 +152,15 @@ function totalQuantityPrice(){
     }
 }
 
-let orderId = "";
 
-function addListener() {
+
+
 const formulaireCommande = document.querySelector("#order");
     formulaireCommande.addEventListener("click", (event) => {
         event.preventDefault();
 
 
-        const inputId = {
+        const contact = {
             firstName: document.querySelector("#firstName").value,
             lastName: document.querySelector("#lastName").value,
             address:document.querySelector("#address").value,
@@ -163,7 +169,7 @@ const formulaireCommande = document.querySelector("#order");
         };
 
 function verifyFirstName() {
-    const formulaireFirstName = inputId.firstName;
+    const formulaireFirstName = contact.firstName;
     let regexFirstName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
     if (regexFirstName.test(formulaireFirstName)) {
         return true } else {
@@ -177,7 +183,7 @@ function verifyFirstName() {
 }
 
 function verifyLastName() {
-    const formulaireLastName = inputId.lastName;
+    const formulaireLastName = contact.lastName;
     let regexLastName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
     if (regexLastName.test(formulaireLastName)) {
         return true } else {
@@ -191,7 +197,7 @@ function verifyLastName() {
 }
 
 function verifyAdress() {
-    const formulaireAddress = inputId.address;
+    const formulaireAddress = contact.address;
     const regexAddress = /^([0-9]{1,} [a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]{5,})$/
     if (regexAddress.test(formulaireAddress)) {
         return true } else {
@@ -205,7 +211,7 @@ function verifyAdress() {
 }
 
 function verifyCity() {
-    const formulaireCity = inputId.city;
+    const formulaireCity = contact.city;
     const regexCity = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]){2,}$/
     if (regexCity.test(formulaireCity)) {
         return true } else {
@@ -220,7 +226,7 @@ function verifyCity() {
 
 
 function verifyEmail() {
-    const formulaireEmail = inputId.email;                 
+    const formulaireEmail = contact.email;                 
     const regexEmail = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ_.-]{3,}[@]{1}[a-z]+[.]{1}[a-z]{2,})$/
     if (regexEmail.test(formulaireEmail)) {
         return true } else {
@@ -235,29 +241,31 @@ function verifyEmail() {
 
 
 if (verifyFirstName() && verifyLastName() && verifyAdress() && verifyCity() && verifyEmail()) {
-    localStorage.setItem("commande", JSON.stringify(inputId));
+    localStorage.setItem("contact", JSON.stringify(contact));
     order();
 }
 
-
+let orderId = "";
 
 function order(){
     
+    
        
         // const chargeUtile = localStorage.setItem("commande", JSON.stringify(inputId));
+        console.log({contact, products});
         
-        
-
+      
         fetch("http://localhost:3000/api/products/order", {
             method: "POST",
-            body: JSON.stringify({inputId, products}),
-            headers: {"Content-Type": "application.json",},
+            body: JSON.stringify({contact, products}),
+            headers: {
+                "Content-Type": "application/json"
+              },
         })
-            .then((response) => { return response.json(); })
+            .then((response) => response.json())
             .then((data) => {
-                const orderId = data.orderId;
-                console.log(orderId)
-                location.href = "confirmation.html?id=" + orderId; 
+                orderId = data.orderId;
+             location.href = "confirmation.html?id=" + orderId; 
                 
             })
             .catch((error) => console.log(error))
@@ -266,8 +274,7 @@ function order(){
 
 
 })
-}
-addListener()
+
 /* 
 // regex firstName = (/([a-zA-Z-]){1}/) Amélioré : /^([a-zA-Z-]){3,25}$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ-]){3,25}$/
 // regex lastName = (/([a-zA-Z-]){1}/)  Amélioré : /^([a-zA-Z-]){3,35}$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,35}$/
