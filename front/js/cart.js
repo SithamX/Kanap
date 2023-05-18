@@ -1,5 +1,6 @@
 let selectionJson = JSON.parse(localStorage.getItem("cart"));
 console.log(selectionJson)
+let products = [];
 
 
 function viewProductsCart(){
@@ -145,14 +146,14 @@ function totalQuantityPrice(){
     }
 }
 
+let orderId = "";
 
-
-
-function order(){
-    const formulaireCommande = document.querySelector("#order");
+function addListener() {
+const formulaireCommande = document.querySelector("#order");
     formulaireCommande.addEventListener("click", (event) => {
         event.preventDefault();
-       
+
+
         const inputId = {
             firstName: document.querySelector("#firstName").value,
             lastName: document.querySelector("#lastName").value,
@@ -160,102 +161,113 @@ function order(){
             city: document.querySelector("#city").value,
             email: document.querySelector("#email").value,
         };
-        const chargeUtile = localStorage.setItem("commande", JSON.stringify(inputId));
-
-        if (verifyFirstName()) return
-        if (verifyLastName()) return 
-        if (verifyAdress()) return 
-        if (verifyCity()) return 
-        if (verifyEmail()) return
-
-        fetch("http://localhost:3000/api/products/order"), {
-            method: "POST",
-            headers: {"Content-Type": "application.json"},
-            body: chargeUtile
-        }
-        window.location.href = "confirmation.html";
-    });
-}
-order()
 
 function verifyFirstName() {
-    const formulaireFirstName = document.querySelector("#firstName").value;
-    const regexFirstName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ-]){3,25}$/
-    if (regexFirstName.test(formulaireFirstName) === false) {
+    const formulaireFirstName = inputId.firstName;
+    let regexFirstName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
+    if (regexFirstName.test(formulaireFirstName)) {
+        return true } else {
         document.querySelector("#firstNameErrorMsg").insertAdjacentHTML(
             // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
             "beforeend",
             // Création des balises produits
             "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25)."
         )
-        return true
     }  
 }
 
 function verifyLastName() {
-    const formulaireLastName = document.querySelector("#lastName").value;
-    const regexLastName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
-    if (regexLastName.test(formulaireLastName) === false) {
+    const formulaireLastName = inputId.lastName;
+    let regexLastName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
+    if (regexLastName.test(formulaireLastName)) {
+        return true } else {
         document.querySelector("#lastNameErrorMsg").insertAdjacentHTML(
             // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
             "beforeend",
             // Création des balises produits
             "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25)."
         )
-        return true
     }  
 }
 
 function verifyAdress() {
-    const formulaireAddress = document.querySelector("#address").value;
+    const formulaireAddress = inputId.address;
     const regexAddress = /^([0-9]{1,} [a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]{5,})$/
-    if (regexAddress.test(formulaireAddress) === false) {
+    if (regexAddress.test(formulaireAddress)) {
+        return true } else {
         document.querySelector("#addressErrorMsg").insertAdjacentHTML(
             // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
             "beforeend",
             // Création des balises produits
             "Veuillez entrer une adresse valide."
         )
-        return true
     }  
 }
 
 function verifyCity() {
-    const formulaireCity = document.querySelector("#city").value;
+    const formulaireCity = inputId.city;
     const regexCity = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]){2,}$/
-    if (regexCity.test(formulaireCity) === false) {
+    if (regexCity.test(formulaireCity)) {
+        return true } else {
         document.querySelector("#cityErrorMsg").insertAdjacentHTML(
             // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
             "beforeend",
             // Création des balises produits
             "Veuillez entrer un nom de ville valide."
         )
-        return true
     }  
 }
 
 
 function verifyEmail() {
-    const formulaireEmail = document.querySelector("#email").value;                 
+    const formulaireEmail = inputId.email;                 
     const regexEmail = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ_.-]{3,}[@]{1}[a-z]+[.]{1}[a-z]{2,})$/
-    if (regexEmail.test(formulaireEmail) === false) {
+    if (regexEmail.test(formulaireEmail)) {
+        return true } else {
         document.querySelector("#emailErrorMsg").insertAdjacentHTML(
             // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
             "beforeend",
             // Création des balises produits
             "Veuillez entrer une adresse mail valide."
         )
-        return true
     }  
 }
 
 
+if (verifyFirstName() && verifyLastName() && verifyAdress() && verifyCity() && verifyEmail()) {
+    localStorage.setItem("commande", JSON.stringify(inputId));
+    order();
+}
 
 
 
+function order(){
+    
+       
+        // const chargeUtile = localStorage.setItem("commande", JSON.stringify(inputId));
+        
+        
+
+        fetch("http://localhost:3000/api/products/order", {
+            method: "POST",
+            body: JSON.stringify({inputId, products}),
+            headers: {"Content-Type": "application.json",},
+        })
+            .then((response) => { return response.json(); })
+            .then((data) => {
+                const orderId = data.orderId;
+                console.log(orderId)
+                location.href = "confirmation.html?id=" + orderId; 
+                
+            })
+            .catch((error) => console.log(error))
+     
+}
 
 
-
+})
+}
+addListener()
 /* 
 // regex firstName = (/([a-zA-Z-]){1}/) Amélioré : /^([a-zA-Z-]){3,25}$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ-]){3,25}$/
 // regex lastName = (/([a-zA-Z-]){1}/)  Amélioré : /^([a-zA-Z-]){3,35}$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,35}$/
