@@ -10,5 +10,4 @@ const numberOder =  document.querySelector("#orderId").insertAdjacentHTML(
     // Création des balises produits
     `${urlId}` //  `${product.color}`
 );
-
-
+localStorage.clear();

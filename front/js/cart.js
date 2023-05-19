@@ -11,6 +11,7 @@ function viewProductsCart(){
             // Création des balises produits
              " est vide."
             )
+        document.querySelector(".cart__order").style.display = "none";
     } 
     else {
         for (let product of selectionJson) {
@@ -61,15 +62,85 @@ function viewProductsCart(){
 viewProductsCart();
 
 
-
-
 function modifyQuantity(){
+    let inputs = document.querySelector(".itemQuantity");
+    
+        inputs.addEventListener("change", (event) => {
+            event.preventDefault()
+            inputs = inputs(event.target);
+            console.log(inputs)
+
+            let test = inputs.value;
+
+            const idTest = inputs.closest("article");
+            console.log (idTest)
+
+            /*const idTestDeux = inputs.closest("article");
+            console.log (idTestDeux)*/
+
+
+
+            const id = idTest.dataset.id;
+            console.log (id)
+
+            const color = idTest.dataset.color;
+            console.log (color)
+
+
+       
+
+            const newQuantity = {
+                id: id,
+                color: color,
+                quantity: Number(test)
+            }
+           
+            let quantity = [];
+            quantity.push(newQuantity);
+            localStorage.setItem("cart", JSON.stringify(quantity)); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
+            console.log(test)
+            location.reload();
+            totalQuantityPrice();
+        });
+    }
+
+
+
+/* function modifyQuantity() {
+    let itemQtt = document.querySelectorAll('.itemQuantity');
+    for (let j = 0; j < itemQtt.length; j++) {
+      itemQtt[j].addEventListener('change', (event) => {
+      event.preventDefault();
+      // sélection de la nouvelle quantité...
+      // ... qu'on va sauvegarder dans un nouveau tableau
+     // avec les autres éléments du localStorage
+      let itemNewQtt = itemQtt[j].value;
+      const newLocalStorage = {
+        id: selectionJson[j].id,
+        color: selectionJson[j].color,
+        quantity: Number(itemNewQtt)
+      };
+  
+      // actualiser le localStorage avec les nouvelles données récupérées... 
+      selectionJson[j] = newLocalStorage;
+      // ...en transformant les Js en Json
+      localStorage.setItem('cart', JSON.stringify(selectionJson));
+  
+     
+        })
+    }
+  } */
+    
+    
+
+
+/*function modifyQuantity(){
     let inputs = document.querySelector(".itemQuantity");
 //  for (let n = 0; n < inputs.length; n++) {
   //  for (let i = 0; i < inputs.length; i++) {
         inputs.addEventListener("change", (event) => {
-            event.preventDefault();
-            document.querySelector(".itemQuantity")
+            event.preventDefault()
+
             let test = inputs.value;
 
             const idTest = inputs.closest("article");
@@ -95,7 +166,37 @@ function modifyQuantity(){
             totalQuantityPrice();
         });
 //  }
-}
+} */
+
+/* function modifyQuantity(){
+    let inputs = document.querySelector(".itemQuantity");
+ 
+        inputs.addEventListener("change", (event) => {
+            event.preventDefault()
+
+            let inputsValue = inputs.value;
+
+            const article = inputs.closest("article");
+            console.log(article)
+
+            const id = article.dataset.id;
+            console.log(id)
+            const color = article.dataset.color;
+            console.log(color)
+
+            const newQuantity = {
+                id: id,
+                color: color,
+                quantity: Number(inputsValue)
+            }
+           
+            let quantity = [];
+            quantity.push(newQuantity);
+            localStorage.setItem("cart", JSON.stringify(quantity)); 
+            location.reload();
+            totalQuantityPrice();
+        });
+}  */
 
 function deleteProduct(){
     let deleteItem = document.querySelector(".deleteItem");
