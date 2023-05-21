@@ -1,9 +1,12 @@
+// Récupération des données dans le localStorage
 let selectionJson = JSON.parse(localStorage.getItem("cart"));
 console.log(selectionJson)
 let products = [];
 
 
+// Fonction permettant d'afficher les produits dans le panier
 function viewProductsCart(){
+    // Ajout d'une condition permettant d'ajouter du texte et de cacher le formulaire de commande si le localStorage est vide 
     if (selectionJson === null || selectionJson == 0) {
         document.querySelector("h1").insertAdjacentHTML(
             // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
@@ -13,19 +16,18 @@ function viewProductsCart(){
             )
         document.querySelector(".cart__order").style.display = "none";
     } 
+    // Si le localStorage comporte un élément, il s'affiche
     else {
         for (let product of selectionJson) {
-            console.log(product.id)
-            console.log(product.quantity)
-            console.log(product.color)
+
+            // Récupération des données d'un produit spécifique dans l'API en fonction de son ID 
             fetch(`http://localhost:3000/api/products/${product.id}`)
                 .then(response => response.json())
                 .then((prod) => {
-                                console.log(prod.imageUrl)
-
                                 // Création du tableau des produits à envoyer au serveur 
                                 products.push(product.id); // je crois que ça ne sert à rien puisque même en le retirant j'ai quand-même l'id qui s'affiche dans l'url de la page de confirmation
                             
+                                // Ajout du code html permettant d'afficher correctement le produit sélectionné
                                 document.querySelector("#cart__items").insertAdjacentHTML(
                                     // Position à l'intérieur de l'élément, après son dernier enfant
                                     "afterbegin",
@@ -52,6 +54,8 @@ function viewProductsCart(){
                                         </div>
                                     </article>`
                                 )
+
+                        // Appel des fonctions de calcul du total, de la modification et de la suppression d'un produit.
                         totalQuantityPrice();
                         modifyQuantity();
                         deleteProduct();
@@ -62,6 +66,7 @@ function viewProductsCart(){
 viewProductsCart();
 
 
+// Fonction de modification d'une quantité
 function modifyQuantity(){
     let inputs = document.querySelector(".itemQuantity");
     
@@ -198,12 +203,11 @@ function modifyQuantity(){
         });
 }  */
 
+// Fonction de suppression d'un produit
 function deleteProduct(){
     let deleteItem = document.querySelector(".deleteItem");
-    //let cartDelete = [];
+    
         deleteItem.addEventListener("click", () => {
-
-
             const idTest = deleteItem.closest("article");
             console.log(idTest)
            
@@ -254,133 +258,159 @@ function totalQuantityPrice(){
 }
 
 
+// Fonction faisant fonctionner le formulaire de commande 
+function formulaire() {
+    const formulaireCommande = document.querySelector("#order");
+        formulaireCommande.addEventListener("click", (event) => {
+            event.preventDefault();
 
+            // Création d'un objet qui permettra de faire appel efficacement à chaque input ayant une valeur de saisie
+            const contact = {
+                firstName: document.querySelector("#firstName").value,
+                lastName: document.querySelector("#lastName").value,
+                address:document.querySelector("#address").value,
+                city: document.querySelector("#city").value,
+                email: document.querySelector("#email").value,
+            };
 
-const formulaireCommande = document.querySelector("#order");
-    formulaireCommande.addEventListener("click", (event) => {
-        event.preventDefault();
+            // Fonction vérifiant la bonne saisie du prénom
+            function verifyFirstName() {
+                const formulaireFirstName = contact.firstName;
 
+                // Caractères autorisés avec une limite minimale et maximale
+                let regexFirstName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
+                if (regexFirstName.test(formulaireFirstName)) {
+                    return true } 
+                    // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
+                    else {
+                    document.querySelector("#firstNameErrorMsg").insertAdjacentHTML(
+                        "beforeend",
+                        "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25)."
+                    )
+                }  
+            }
 
-        const contact = {
-            firstName: document.querySelector("#firstName").value,
-            lastName: document.querySelector("#lastName").value,
-            address:document.querySelector("#address").value,
-            city: document.querySelector("#city").value,
-            email: document.querySelector("#email").value,
-        };
+            // Fonction vérifiant la bonne saisie du nom de famille
+            function verifyLastName() {
+                const formulaireLastName = contact.lastName;
 
-function verifyFirstName() {
-    const formulaireFirstName = contact.firstName;
-    let regexFirstName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
-    if (regexFirstName.test(formulaireFirstName)) {
-        return true } else {
-        document.querySelector("#firstNameErrorMsg").insertAdjacentHTML(
-            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
-            "beforeend",
-            // Création des balises produits
-            "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25)."
-        )
-    }  
-}
-
-function verifyLastName() {
-    const formulaireLastName = contact.lastName;
-    let regexLastName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
-    if (regexLastName.test(formulaireLastName)) {
-        return true } else {
-        document.querySelector("#lastNameErrorMsg").insertAdjacentHTML(
-            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
-            "beforeend",
-            // Création des balises produits
-            "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25)."
-        )
-    }  
-}
-
-function verifyAdress() {
-    const formulaireAddress = contact.address;
-    const regexAddress = /^([0-9]{1,} [a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]{5,})$/
-    if (regexAddress.test(formulaireAddress)) {
-        return true } else {
-        document.querySelector("#addressErrorMsg").insertAdjacentHTML(
-            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
-            "beforeend",
-            // Création des balises produits
-            "Veuillez entrer une adresse valide."
-        )
-    }  
-}
-
-function verifyCity() {
-    const formulaireCity = contact.city;
-    const regexCity = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]){2,}$/
-    if (regexCity.test(formulaireCity)) {
-        return true } else {
-        document.querySelector("#cityErrorMsg").insertAdjacentHTML(
-            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
-            "beforeend",
-            // Création des balises produits
-            "Veuillez entrer un nom de ville valide."
-        )
-    }  
-}
-
-
-function verifyEmail() {
-    const formulaireEmail = contact.email;                 
-    const regexEmail = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ_.-]{3,}[@]{1}[a-z]+[.]{1}[a-z]{2,})$/
-    if (regexEmail.test(formulaireEmail)) {
-        return true } else {
-        document.querySelector("#emailErrorMsg").insertAdjacentHTML(
-            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
-            "beforeend",
-            // Création des balises produits
-            "Veuillez entrer une adresse mail valide."
-        )
-    }  
-}
-
-
-if (verifyFirstName() && verifyLastName() && verifyAdress() && verifyCity() && verifyEmail()) {
-    localStorage.setItem("contact", JSON.stringify(contact));
-    order();
-}
-
-let orderId = "";
-
-function order(){
-    
-    
-       
-        // const chargeUtile = localStorage.setItem("commande", JSON.stringify(inputId));
-        console.log({contact, products});
-        
-      
-        fetch("http://localhost:3000/api/products/order", {
-            method: "POST",
-            body: JSON.stringify({contact, products}),
-            headers: {
-                "Content-Type": "application/json"
-              },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                orderId = data.orderId;
-             location.href = "confirmation.html?id=" + orderId; 
+                // Caractères autorisés avec une limite minimale et maximale
+                let regexLastName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
+                if (regexLastName.test(formulaireLastName)) {
+                    return true 
+                } 
                 
-            })
-            .catch((error) => console.log(error))
-     
+                // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
+                else {
+                    document.querySelector("#lastNameErrorMsg").insertAdjacentHTML(
+                        "beforeend",
+                        "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25)."
+                    )
+                }  
+            }
+
+            // Fonction vérifiant la bonne saisie de l'adresse postale
+            function verifyAdress() {
+                const formulaireAddress = contact.address;
+
+                // Caractères autorisés et dans quel ordre avec une limite minimale et maximale
+                const regexAddress = /^([0-9]{1,} [a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]{5,})$/
+                if (regexAddress.test(formulaireAddress)) {
+                    return true 
+                } 
+                
+                // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
+                else {
+                    document.querySelector("#addressErrorMsg").insertAdjacentHTML(
+                        "beforeend",
+                        "Veuillez entrer une adresse valide."
+                    )
+                }  
+            }
+
+            // Fonction vérifiant la bonne saisie de la ville
+            function verifyCity() {
+                const formulaireCity = contact.city;
+
+                // Caractères autorisés et dans quel ordre avec une limite minimale et maximale
+                const regexCity = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]){2,}$/
+                if (regexCity.test(formulaireCity)) {
+                    return true 
+                } 
+                
+                // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
+                else {
+                    document.querySelector("#cityErrorMsg").insertAdjacentHTML(
+                        "beforeend",
+                        "Veuillez entrer un nom de ville valide."
+                    )
+                }  
+            }
+
+            // Fonction vérifiant la bonne saisie de l'adresse mail
+            function verifyEmail() {
+                const formulaireEmail = contact.email;           
+
+                // Caractères autorisés et dans quel ordre avec une limite minimale et maximale      
+                const regexEmail = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ_.-]{3,}[@]{1}[a-z]+[.]{1}[a-z]{2,})$/
+                if (regexEmail.test(formulaireEmail)) {
+                    return true 
+                } 
+                
+                // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
+                else {
+                    document.querySelector("#emailErrorMsg").insertAdjacentHTML(
+                        "beforeend",
+                        "Veuillez entrer une adresse mail valide."
+                    )
+                }  
+            }
+
+            // Si toutes les valeurs insérées par l'utilisateur dans les champs sont bonnes, elles sont envoyées dans le localStorage
+            if (verifyFirstName() && verifyLastName() && verifyAdress() && verifyCity() && verifyEmail()) {
+                localStorage.setItem("contact", JSON.stringify(contact));
+
+                // Appel de la fonction qui met les valeurs récupéres en forme pour le localStorage
+                order();
+            }
+
+            // Variable qui contiendra l'ID de commande
+            let orderId = "";
+
+
+            // Fonction mettant en forme les valeurs récupéres pour le localStorage
+            function order(){    
+                
+                // Ici j'envoi des données vers l'API grâce à la requête fetch POST
+                fetch("http://localhost:3000/api/products/order", {
+                    method: "POST",
+                    body: JSON.stringify({contact, products}),
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+
+                        // Demain, commenter cette partie, ça me permettra de mieux commprendre comment ça foncitonne
+                        orderId = data.orderId;
+                        location.href = "confirmation.html?id=" + orderId;        
+                    })
+                    .catch((error) => console.log(error))
+                
+            }
+
+
+    })
 }
+formulaire();
 
 
-})
-
-/* 
-// regex firstName = (/([a-zA-Z-]){1}/) Amélioré : /^([a-zA-Z-]){3,25}$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ-]){3,25}$/
-// regex lastName = (/([a-zA-Z-]){1}/)  Amélioré : /^([a-zA-Z-]){3,35}$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,35}$/
-// regex address = (/([0-9a-zA-Z-]+)/)  Amélioré : /^([0-9]{1,} [a-zA-Z-]{5,})$/ nouveau : /^([0-9]{1,} [a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]{5,})$/ 
-// regex city = (/(a-zA-Z-]+)/)         Amélioré : /^([a-zA-Z-]){2,}$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]){2,}$/ 
-// regex email = (/([a-zA-Z-_@.]){1}/)  Amélioré : /^([a-zA-Z-_.]{3,}[@]{1}[a-zA-Z]+[.]{1}[com]*[fr]*[net]*[org]*)$/ ou : /^([a-zA-Z-_.]{3,}[@]{1}[a-z]+[.]{1}[a-z]{2,})*$/ ou : /^([a-zA-Z-_.]{3,}[@]{1}[a-zA-Z]+[.]{1})([com]{3})*([fr]{2})*([net]{3})*([org]{3})*$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ_.-]{3,}[@]{1}[a-z]+[.]{1}[a-z]{2,})$/     
+/* Les regex que j'ai créé manuellement : 
+    regex firstName = (/([a-zA-Z-]){1}/) Amélioré : /^([a-zA-Z-]){3,25}$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ-]){3,25}$/
+    regex lastName = (/([a-zA-Z-]){1}/)  Amélioré : /^([a-zA-Z-]){3,35}$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,35}$/
+    regex address = (/([0-9a-zA-Z-]+)/)  Amélioré : /^([0-9]{1,} [a-zA-Z-]{5,})$/ nouveau : /^([0-9]{1,} [a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]{5,})$/ 
+    regex city = (/(a-zA-Z-]+)/)         Amélioré : /^([a-zA-Z-]){2,}$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]){2,}$/ 
+    regex email = (/([a-zA-Z-_@.]){1}/)  Amélioré : /^([a-zA-Z-_.]{3,}[@]{1}[a-zA-Z]+[.]{1}[com]*[fr]*[net]*[org]*)$/ ou : /^([a-zA-Z-_.]{3,}[@]{1}[a-z]+[.]{1}[a-z]{2,})*$/ ou : /^([a-zA-Z-_.]{3,}[@]{1}[a-zA-Z]+[.]{1})([com]{3})*([fr]{2})*([net]{3})*([org]{3})*$/ nouveau : /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ_.-]{3,}[@]{1}[a-z]+[.]{1}[a-z]{2,})$/     
 */
 
