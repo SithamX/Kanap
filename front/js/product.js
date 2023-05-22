@@ -74,10 +74,11 @@ function addSelectionCart(){
      alert("Veuillez choisir une quantitée entre 1 et 100.");
      return;
     } else {
-      window.location.href = "cart.html";
+      //window.location.href = "cart.html";
+      //window.location.href = "cart.html";
     }
 
-    // Enregistrements de certaines valeurs dans un objet
+    /*// Enregistrements de certaines valeurs dans un objet
     const cartSelection = {
       id: urlId,
       color: color,
@@ -106,7 +107,7 @@ function addSelectionCart(){
       let cart = [];
       cart.push(cartSelection);
       localStorage.setItem("cart", JSON.stringify(cart)); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
-    }
+    } */
     /*const losto = localStorage.length;
     if (losto = 1) {
       localStorage.clear();
@@ -122,7 +123,78 @@ function addSelectionCart(){
         })
       localStorage.setItem("cart2", JSON.stringify(cart));
     }*/
+
+    let localStorageP = JSON.parse(localStorage.getItem("cart"));
+    const cartSelection = {
+      id: urlId,
+      color: color,
+      quantity: Number(quantity)
+    }
+
+    if (localStorageP) {
+      let azerty = localStorageP.length;
+      console.log(azerty);
+      if (localStorageP.length > 0) {
+        localStorageP.push(cartSelection);
+        localStorage.setItem("cart", JSON.stringify(localStorageP));          
+        return
+      }
+      /*if (localStorageP.id == cartSelection.id && localStorageP.color == cartSelection.color) {
+        localStorageP.quantity = localStorageP.quantity + cartSelection.quantity;
+        localStorage.setItem("cart", JSON.stringify(localStorageP));
+        return;
+      }*/
+      return
+    }  else {
+
+      // Enregistrements de certaines valeurs dans un objet
+      
+
+      
+        let cart = [];
+        cart.push(cartSelection);
+        localStorage.setItem("cart", JSON.stringify(cart)); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
+        
+
+    }
+
+     
+
+
   });
+  
 }
 addSelectionCart()
 
+
+
+
+
+/*   let localStorageP = JSON.parse(localStorage.getItem("cart"));
+    const cartSelection = {
+      id: urlId,
+      color: color,
+      quantity: Number(quantity)
+    }
+
+    if (localStorageP) {
+      let azerty = localStorageP.length;
+      console.log(azerty);
+      if (localStorageP.length > 0) {
+        localStorageP.push(cartSelection);
+        localStorage.setItem("cart", JSON.stringify(localStorageP));
+        return
+      }
+      return
+    }  else {
+
+      // Enregistrements de certaines valeurs dans un objet
+      
+
+      
+        let cart = [];
+        cart.push(cartSelection);
+        localStorage.setItem("cart", JSON.stringify(cart)); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
+        
+
+    } */
