@@ -56,7 +56,7 @@ function viewProductsCart(){
                                 )
 
                         // Appel des fonctions de calcul du total, de la modification et de la suppression d'un produit.
-                        totalQuantityPrice();
+                        
                         modifyQuantity();
                         deleteProduct();
                 });
@@ -67,7 +67,7 @@ viewProductsCart();
 
 
 // Fonction de modification d'une quantité
-function modifyQuantity(){
+/*function modifyQuantity(){
     let inputs = document.querySelector(".itemQuantity");
     
         inputs.addEventListener("change", (event) => {
@@ -78,14 +78,14 @@ function modifyQuantity(){
             let test = inputs.value;
 
             const idTest = inputs.closest("article");
-            console.log (idTest)
+            console.log (idTest)*/
 
             /*const idTestDeux = inputs.closest("article");
             console.log (idTestDeux)*/
 
 
 
-            const id = idTest.dataset.id;
+        /*    const id = idTest.dataset.id;
             console.log (id)
 
             const color = idTest.dataset.color;
@@ -107,7 +107,7 @@ function modifyQuantity(){
             location.reload();
             totalQuantityPrice();
         });
-    }
+    }*/
 
 
 
@@ -173,15 +173,18 @@ function modifyQuantity(){
 //  }
 } */
 
-/* function modifyQuantity(){
+ function modifyQuantity(){
     let inputs = document.querySelector(".itemQuantity");
  
         inputs.addEventListener("change", (event) => {
             event.preventDefault()
 
-            let inputsValue = inputs.value;
+            /*let input = document.querySelector(".itemQuantity").value.event.target;
+            console.log(input)*/
 
-            const article = inputs.closest("article");
+            let inputsValue = event.target.value;
+
+            const article = event.target.closest("article");
             console.log(article)
 
             const id = article.dataset.id;
@@ -189,26 +192,49 @@ function modifyQuantity(){
             const color = article.dataset.color;
             console.log(color)
 
-            const newQuantity = {
+            let carts = JSON.parse(localStorage.getItem("cart"));
+
+            carts = carts.map((item => {
+                console.log(item.quantity)
+                if (item.id == id && item.color == color) {
+                   item.quantity = Number(inputsValue);
+                }
+                return item;
+            }));
+            
+           /* carts = item => item 
+                
+            if (item.id == id && item.color == color) {
+               item.quantity = inputsValue;
+            }*/
+
+           /* const newQuantity = {
                 id: id,
                 color: color,
                 quantity: Number(inputsValue)
-            }
+            }*/
            
-            let quantity = [];
-            quantity.push(newQuantity);
-            localStorage.setItem("cart", JSON.stringify(quantity)); 
-            location.reload();
+            /*const cart = JSON.parse(localStorage.getItem("cart"));
+            console.log(cart)
+            const la = cart;
+            console.log(la)*/
+            /*let quantity = [];
+            quantity.push(newQuantity);*/
+            /*const newCart = quantity;
+            console.log(newCart)*/
+            localStorage.setItem("cart", JSON.stringify(carts)); 
             totalQuantityPrice();
+            location.reload();
+          
         });
-}  */
+}  
 
-// Fonction de suppression d'un produit
+/* // Fonction de suppression d'un produit
 function deleteProduct(){
     let deleteItem = document.querySelector(".deleteItem");
     
-        deleteItem.addEventListener("click", () => {
-            const idTest = deleteItem.closest("article");
+        deleteItem.addEventListener("click", (event) => {
+            const idTest = event.target.closest("article");
             console.log(idTest)
            
 
@@ -217,35 +243,133 @@ function deleteProduct(){
             const color = idTest.dataset.color;
             console.log(color)
 
+            let quantits = JSON.parse(localStorage.getItem("cart"));
+            console.log(quantits)
+            quantits = quantits.map(quantit => quantit.quantity);
+
+            console.log(event.target.quantits)
+
+            console.log(document.querySelector(".itemQuantity").value)
+
+
             const newQuantity = {
                 id: id,
                 color: color,
             }
+            
+            console.log(newQuantity)
            
             let quantity = [];
             quantity.push(newQuantity);
+            
 
-            quantity.splice(0);
+            console.log(quantity)
+
+            const filterQuantity = newQuantity.filter();
+            console.log(filterQuantity)
+
+            console.log(quantits) */
+
+           /* quantity.splice(0);
 
                 selectionJson = localStorage.setItem("cart", JSON.stringify(quantity));
-                location.reload();
+                location.reload(); */
+         /*   });
+} */
+
+
+/* // Fonction de suppression d'un produit
+function deleteProduct(){
+    let deleteItem = document.querySelector(".deleteItem");
+    
+        deleteItem.addEventListener("click", (event) => {
+            event.preventDefault()
+
+
+            const idTest = event.target.closest("article");
+            console.log(idTest)
+           
+
+            const id = idTest.dataset.id;
+            const color = idTest.dataset.color;
+
+            const newQuantity = {
+                id: id,
+                color: color,
+                quantity: 10,
+            }
+            console.log(newQuantity)
+
+            let quantity = [];
+            quantity.push(newQuantity);
+            console.log(quantity)
+
+            let quantits = JSON.parse(localStorage.getItem("cart"));
+            console.log(quantits)
+
+           // console.log(document.querySelector(".itemQuantity").value)     
+
+            quantits = quantits.filter((item) => !(item.id == id && item.color == color));
+            console.log(quantits)
+
+            localStorage.setItem("cart", JSON.stringify(quantits));
+            });
+} */
+
+// Fonction de suppression d'un produit
+function deleteProduct(){
+    let deleteItem = document.querySelector(".deleteItem");
+    
+        deleteItem.addEventListener("click", (event) => {
+            // Annulation du comportement par défaut
+            event.preventDefault()
+
+            // Récupération de la balise article du produit qui à précisément été cliquée 
+            const idTest = event.target.closest("article");
+            console.log(idTest)
+
+            // Récupération du data-id et du data-color de la balise article 
+            const id = idTest.dataset.id;
+            const color = idTest.dataset.color;
+
+            // Récupération des données dans le localStorage
+            let quantits = JSON.parse(localStorage.getItem("cart"));
+            console.log(quantits)   
+
+            // Utilisation de la méthode filter() pour retourner un tableau qui ne contiendra pas le produit cliqué,
+            // et  en précision de filtrage, on retire du tableau l'objet ayant le même id et la même couleur que celui du produit dont on à cliqué sur "Supprimer"
+            quantits = quantits.filter(item => !(item.id === id && item.color === color));
+            console.log(quantits)
+
+            // Ajout du nouveau tableau dans le local storage (ce qui à pour effet de retirer le tableau précédemment supprimé)
+            localStorage.setItem("cart", JSON.stringify(quantits));
             });
 }
 
+const input = document.querySelector(".itemQuantity");
+console.log(input)
 
 function totalQuantityPrice(){
-    for (let product of selectionJson) {
-        fetch(`http://localhost:3000/api/products/${product.id}`)
+    for (let i = 0; i < selectionJson.length; i++) {
+
+        
+        fetch(`http://localhost:3000/api/products/${selectionJson[i].id}`)
         .then(response => response.json())
         .then((prod) => {
 
-            const price = product.quantity * prod.price;
+            console.log(selectionJson[i].quantity)
+            const qty = [selectionJson[i].quantity * [i]];
+            console.log(qty)
+            
+
+            const price = selectionJson[i].quantity * prod.price;
+            //const totalQuantity = 
 
             document.querySelector("#totalQuantity").insertAdjacentHTML(
                 // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
                 "beforeend",
                 // Création des balises produits
-                `${product.quantity}`
+                `${selectionJson[i].quantity}`
                 )
             document.querySelector("#totalPrice").insertAdjacentHTML(
                 // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
@@ -256,6 +380,7 @@ function totalQuantityPrice(){
         });
     }
 }
+totalQuantityPrice();
 
 
 // Fonction faisant fonctionner le formulaire de commande 
