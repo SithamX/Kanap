@@ -2,6 +2,7 @@
 let selectionJson = JSON.parse(localStorage.getItem("cart"));
 console.log(selectionJson)
 let products = [];
+let productsId = [];
 
 
 // Fonction permettant d'afficher les produits dans le panier
@@ -32,9 +33,14 @@ function viewProductsCart(){
                     
 
                                 // Création du tableau des produits à envoyer au serveur 
-                                products.push(product); // je crois que ça ne sert à rien puisque même en le retirant j'ai quand-même l'id qui s'affiche dans l'url de la page de confirmation
+                                products.push(product.id); // je crois que ça ne sert à rien puisque même en le retirant j'ai quand-même l'id qui s'affiche dans l'url de la page de confirmation, quoique, je le laisse quand-même puisque c'est ce qui est demanbdé à la fin des Spécifications techniques du projet
                                 console.log(products)
-                                localStorage.setItem("cartPrice", JSON.stringify(products));
+
+                                productsId.push(product); 
+                                console.log(productsId)
+                                localStorage.setItem("cartPrice", JSON.stringify(productsId));
+
+                                
 
                                 // Ajout du code html permettant d'afficher correctement le produit sélectionné
                                 document.querySelector("#cart__items").insertAdjacentHTML(
@@ -500,9 +506,11 @@ function totalQuantityPrice() {
     console.log(selectionJsonPrice)
     /*const id = selectionJson.map(identify => identify.id);
     console.log(id) */
-    console.log(products)
+    console.log(productsId)
 
-    /*for (let prdct of products) {
+    if (selectionJsonPrice != null) {
+
+    /*for (let prdct of productsId) {
         console.log(prdct)
         const toutal = prdct.reduce((total, item) => total + item.price * item.quantity, 0);
 
@@ -525,7 +533,7 @@ function totalQuantityPrice() {
 
     
    
-    products.forEach(element => {
+    productsId.forEach(element => {
         
          const priceProduitDansLePanier = element.price * element.quantity;
          priceTotalCalcul += priceProduitDansLePanier;
@@ -551,7 +559,7 @@ function totalQuantityPrice() {
                 `${total}` //  `${product.color}`
             )
          
-  
+            }
     
 }
 
