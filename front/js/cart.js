@@ -18,15 +18,23 @@ function viewProductsCart(){
     } 
     // Si le localStorage comporte un élément, il s'affiche
     else {
+        let i = 0;
         for (let product of selectionJson) {
 
             // Récupération des données d'un produit spécifique dans l'API en fonction de son ID 
             fetch(`http://localhost:3000/api/products/${product.id}`)
                 .then(response => response.json())
                 .then((prod) => {
+
+
+                    product.price = prod.price
+                    console.log(product)
+                    
+
                                 // Création du tableau des produits à envoyer au serveur 
-                                products.push(product.id); // je crois que ça ne sert à rien puisque même en le retirant j'ai quand-même l'id qui s'affiche dans l'url de la page de confirmation
-                            
+                                products.push(product); // je crois que ça ne sert à rien puisque même en le retirant j'ai quand-même l'id qui s'affiche dans l'url de la page de confirmation
+                                localStorage.setItem("cartprice", JSON.stringify(products));
+
                                 // Ajout du code html permettant d'afficher correctement le produit sélectionné
                                 document.querySelector("#cart__items").insertAdjacentHTML(
                                     // Position à l'intérieur de l'élément, après son dernier enfant
@@ -223,7 +231,7 @@ viewProductsCart();
             /*const newCart = quantity;
             console.log(newCart)*/
             localStorage.setItem("cart", JSON.stringify(carts)); 
-            totalQuantityPrice();
+       
             location.reload();
           
         });
@@ -349,27 +357,33 @@ function deleteProduct(){
 const input = document.querySelector(".itemQuantity");
 console.log(input)
 
-function totalQuantityPrice(){
-    for (let i = 0; i < selectionJson.length; i++) {
+/* function totalQuantityPrice(){
+
+    let localStorageParse = JSON.parse(localStorage.getItem("cart"));
+
+    selectionJson = selectionJson.map(quantite => quantite.quantity).reduce((prev, curr) => prev + curr, 0);
+    console.log(selectionJson)
+
+    for (let local of localStorageParse) {
 
         
-        fetch(`http://localhost:3000/api/products/${selectionJson[i].id}`)
+        fetch(`http://localhost:3000/api/products/${local.id}`)
         .then(response => response.json())
         .then((prod) => {
 
-            console.log(selectionJson[i].quantity)
-            const qty = [selectionJson[i].quantity * [i]];
+            console.log(local.quantity)
+            const qty = [local.quantity * prod.price];
             console.log(qty)
             
 
-            const price = selectionJson[i].quantity * prod.price;
+            const price = local.quantity * prod.price;
             //const totalQuantity = 
 
             document.querySelector("#totalQuantity").insertAdjacentHTML(
                 // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
                 "beforeend",
                 // Création des balises produits
-                `${selectionJson[i].quantity}`
+                `${selectionJson}`
                 )
             document.querySelector("#totalPrice").insertAdjacentHTML(
                 // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
@@ -377,10 +391,207 @@ function totalQuantityPrice(){
                 // Création des balises produits
                 `${price}` //  `${product.color}`
             )
+            return local.quantity
         });
     }
 }
+totalQuantityPrice(); */
+
+
+
+/* function totalQuantityPrice(){
+
+    let localStorageParse = JSON.parse(localStorage.getItem("cart"));
+
+    localStorageParse = localStorageParse.map(quantite => quantite.quantity).reduce((prev, curr) => prev + curr, 0);
+    console.log(localStorageParse)
+
+
+    /*const id = selectionJson.map(identify => identify.id);
+    console.log(id) */
+
+
+ /*   for (i = 0; i < selectionJson.length; i++) { 
+        const test = selectionJson[i].id;
+        console.log(test)
+    }
+   
+    for (let localStorageJson of selectionJson) {
+        
+        fetch(`http://localhost:3000/api/products/${localStorageJson.id}`)
+        .then(response => response.json())
+        .then((prod) => {
+            console.log([prod])
+            console.log(prod.price)
+            console.log(selectionJson.length)
+
+            const pisse = prod.price;
+
+            console.log(pisse)
+
+            const prix = {
+                price: pisse,
+            }
+
+            console.log(prix)
+
+            
+
+          
+
+            selectionJson.push(prix)
+
+            console.log(selectionJson)
+
+            prod = [prod]
+
+            const p = selectionJson.map(prix => prix.price).reduce((prev, curr) => prev + curr, 0);
+            console.log(p)
+
+            for (let p of selectionJson) {
+
+           
+            console.log(p)
+            p = p.map(prix => prix.price);
+            console.log(p)
+            }
+          
+            
+
+            let prices = [prod.price];
+            console.log(prices)
+            //const totalQuantity = 
+
+            const price = prod.map(prix => prix.price);
+            console.log(price)
+
+           
+            document.querySelector("#totalPrice").insertAdjacentHTML(
+                // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+                "beforeend",
+                // Création des balises produits
+                `${price}` //  `${product.color}`
+            )
+         
+        });
+    }
+    document.querySelector("#totalQuantity").insertAdjacentHTML(
+        // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+        "beforeend",
+        // Création des balises produits
+        `${localStorageParse}`
+        )
+    
+}
+totalQuantityPrice(); */
+
+
+const prods = [];
+
+
+
+function totalQuantityPrice() {
+
+  
+    
+    let selectionJsonPrice = JSON.parse(localStorage.getItem("cartprice"));
+    console.log(selectionJsonPrice)
+    /*const id = selectionJson.map(identify => identify.id);
+    console.log(id) */
+    console.log(products)
+
+    const set = selectionJsonPrice.map(quantite => quantite.price);
+    console.log(set)
+
+    const setdeux = selectionJsonPrice.map(quantite => quantite.quantity).reduce((prev, curr) => prev + curr, 0);
+    console.log(setdeux)
+    
+    const total = selectionJsonPrice.reduce((total, item) => total + item.price * item.quantity, 0);
+
+    console.log(total)
+
+
+   /* let priceTotalCalcul = 0;  
+
+
+    
+   
+    products.forEach(element => {
+        
+         const priceProduitDansLePanier = element.price * element.quantity;
+         priceTotalCalcul += priceProduitDansLePanier;
+
+         console.log(quantityTotalCalcul)
+         console.log(priceTotalCalcul)
+        }); */
+        
+
+        document.querySelector("#totalQuantity").insertAdjacentHTML(
+            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+            "beforeend",
+            // Création des balises produits
+            `${setdeux}` //  `${product.color}`
+        )
+
+            
+           
+            document.querySelector("#totalPrice").insertAdjacentHTML(
+                // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+                "beforeend",
+                // Création des balises produits
+                `${total}` //  `${product.color}`
+            )
+         
+  
+    
+}
+
 totalQuantityPrice();
+
+
+/* function totalQuantityPrice(prod){
+
+    let localStorageParse = JSON.parse(localStorage.getItem("cart"));
+
+    localStorageParse = localStorageParse.map(quantite => quantite.quantity).reduce((prev, curr) => prev + curr, 0);
+    console.log(localStorageParse)
+
+
+    /*const id = selectionJson.map(identify => identify.id);
+    console.log(id) */
+  
+   
+  
+ /*   for(let prods in prod) {
+          
+        console.log(localStorageParse)
+        console.log(prods.price)
+        let prices = prods.price;
+        //const totalQuantity = 
+
+        console.log(prices)
+
+     }
+     
+  
+    console.log(prices)
+
+document.querySelector("#totalQuantity").insertAdjacentHTML(
+    // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+    "beforeend",
+    // Création des balises produits
+    `${localStorageParse}`
+    )
+
+
+document.querySelector("#totalPrice").insertAdjacentHTML(
+    // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+    "beforeend",
+    // Création des balises produits
+    `${prices}` //  `${product.color}`
+)
+
+} */
 
 
 // Fonction faisant fonctionner le formulaire de commande 
