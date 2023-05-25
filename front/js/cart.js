@@ -33,7 +33,8 @@ function viewProductsCart(){
 
                                 // Création du tableau des produits à envoyer au serveur 
                                 products.push(product); // je crois que ça ne sert à rien puisque même en le retirant j'ai quand-même l'id qui s'affiche dans l'url de la page de confirmation
-                                localStorage.setItem("cartprice", JSON.stringify(products));
+                                console.log(products)
+                                localStorage.setItem("cartPrice", JSON.stringify(products));
 
                                 // Ajout du code html permettant d'afficher correctement le produit sélectionné
                                 document.querySelector("#cart__items").insertAdjacentHTML(
@@ -351,6 +352,7 @@ function deleteProduct(){
 
             // Ajout du nouveau tableau dans le local storage (ce qui à pour effet de retirer le tableau précédemment supprimé)
             localStorage.setItem("cart", JSON.stringify(quantits));
+            location.reload();
             });
 }
 
@@ -494,11 +496,18 @@ function totalQuantityPrice() {
 
   
     
-    let selectionJsonPrice = JSON.parse(localStorage.getItem("cartprice"));
+    let selectionJsonPrice = JSON.parse(localStorage.getItem("cartPrice"));
     console.log(selectionJsonPrice)
     /*const id = selectionJson.map(identify => identify.id);
     console.log(id) */
     console.log(products)
+
+    /*for (let prdct of products) {
+        console.log(prdct)
+        const toutal = prdct.reduce((total, item) => total + item.price * item.quantity, 0);
+
+    console.log(toutal)
+    } */
 
     const set = selectionJsonPrice.map(quantite => quantite.price);
     console.log(set)
