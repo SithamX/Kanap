@@ -74,173 +74,45 @@ function addSelectionCart(){
      alert("Veuillez choisir une quantitée entre 1 et 100.");
      return;
     } else {
-      //window.location.href = "cart.html";
-      //window.location.href = "cart.html";
+      window.location.href = "cart.html";
     }
 
-    /*// Enregistrements de certaines valeurs dans un objet
+
+
+    // Création d'un objet contenant l'id, la couleur et la quantité du produit choisi
     const cartSelection = {
       id: urlId,
       color: color,
       quantity: Number(quantity)
     }
 
-    // Création d'une variable permettant de récupérer les données stockées dans le localStorage quant il y en aura
-    let localStorageParse = JSON.parse(localStorage.getItem("cart"));
-
-    // Création d'une condition 
-    if (localStorageParse) {
-      let product = localStorageParse.find((product) => product.id == cartSelection.id && product.color == cartSelection.color);
-    
-      if (product) {
-        product.quantity = product.quantity + cartSelection.quantity;
-        localStorage.setItem("cart", JSON.stringify(localStorageParse));
-        return;
-      }
-
-      localStorageParse.push(cartSelection);
-      localStorage.setItem("cart", JSON.stringify(localStorageParse));
-      return;
-    } 
-
-     else {
-      let cart = [];
-      cart.push(cartSelection);
-      localStorage.setItem("cart", JSON.stringify(cart)); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
-    } */
-    /*const losto = localStorage.length;
-    if (losto = 1) {
-      localStorage.clear();
-    } */
-   /* const local = localStorage.length;
-    if (local > 0) {
-      localStorage.getItem("cart", JSON.parse);
-      const cart = [];
-        cart.push({
-          id: urlId,
-          color: color,
-          quantity: quantity
-        })
-      localStorage.setItem("cart2", JSON.stringify(cart));
-    }*/
-
-   /* let localStorageP = JSON.parse(localStorage.getItem("cart"));
-    const cartSelection = {
-      id: urlId,
-      color: color,
-      quantity: Number(quantity)
-    }
-
-    /* console.log(localStorageP);
-
-    let localStorag = localStorageP.map(identify => identify.id)
-    console.log(localStorag); */
-    
-
-  /*  if (localStorageP) {
-      let azerty = localStorageP.length;
-      console.log(azerty);
-      let localStoragId = localStorageP.map(identify => identify.id)
-    console.log(localStoragId);
-    let localStoragColor = localStorageP.map(color => color.color)
-    console.log(localStoragColor);
-    let localStoragQuantity = localStorageP.map(quantity => quantity.quantity)
-    console.log(localStoragQuantity);
-      /*if (localStorageP.length > 0) {
-        localStorageP.push(cartSelection);
-        localStorage.setItem("cart", JSON.stringify(localStorageP));         
-        return
-      } */
-   /*   if (localStoragId == cartSelection.id && cartSelection.color == localStoragColor) {
-        let locStoPQ = localStoragQuantity + cartSelection.quantity;
-        console.log(locStoPQ);
-        localStorageP.push(locStoPQ)
-        localStorage.setItem("cart", JSON.stringify(localStorageP));
-        return;
-      }
-      else if (localStoragId == cartSelection.id && cartSelection.color != localStoragColor) {
-        localStorageP.push(cartSelection);
-        localStorage.setItem("cart", JSON.stringify(localStorageP));         
-        return
-      }
-    
-      return
-    }  else {
-
-      // Enregistrements de certaines valeurs dans un objet
-      
-
-      
-        let cart = [];
-        cart.push(cartSelection);
-        localStorage.setItem("cart", JSON.stringify(cart)); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
-        
-
-    } */
-
-
+    // Récupération de ce qui se trouvera dans le localStorage
     let localStorageP = JSON.parse(localStorage.getItem("cart"));
-    const cartSelection = {
-      id: urlId,
-      color: color,
-      quantity: Number(quantity)
-    }
 
+    // Si le localStorage contient au moins un élément, alors :
     if (localStorageP) {
+      // on crée une constante qui permettra de vérifier si la sélection effectuée concernerait un produit ayant déja son id en plus de sa couleur de présents dans le localStorage
       const changeQuantity = localStorageP.find(element => element.id == cartSelection.id && element.color == cartSelection.color);
       console.log(changeQuantity)
+      // si la sélection effectuée concernerait un produit ayant déja son id en plus de sa couleur de présents dans le localStorage, alors on ne modifie que la quantité puis on l'ajoute au localStorage
       if (changeQuantity) {
         changeQuantity.quantity = changeQuantity.quantity + cartSelection.quantity;
         localStorage.setItem("cart", JSON.stringify(localStorageP));
         return
       }
+      // si le produit à un id ou une couleur différente, on l'ajoute dans le localStorage
       localStorageP.push(cartSelection);
       localStorage.setItem("cart", JSON.stringify(localStorageP));
       return
     } 
+    // Si le localStorage est vide, alors on push l'objet dans un tableau et on ajoute le premier produit dans le localStorage
     else {
       let cart = [];
       cart.push(cartSelection);
       localStorage.setItem("cart", JSON.stringify(cart));
     }
-
-     
-
-
   });
-  
 }
 addSelectionCart()
 
 
-
-
-
-/*   let localStorageP = JSON.parse(localStorage.getItem("cart"));
-    const cartSelection = {
-      id: urlId,
-      color: color,
-      quantity: Number(quantity)
-    }
-
-    if (localStorageP) {
-      let azerty = localStorageP.length;
-      console.log(azerty);
-      if (localStorageP.length > 0) {
-        localStorageP.push(cartSelection);
-        localStorage.setItem("cart", JSON.stringify(localStorageP));
-        return
-      }
-      return
-    }  else {
-
-      // Enregistrements de certaines valeurs dans un objet
-      
-
-      
-        let cart = [];
-        cart.push(cartSelection);
-        localStorage.setItem("cart", JSON.stringify(cart)); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
-        
-
-    } */
