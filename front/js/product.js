@@ -78,7 +78,7 @@ function addSelectionCart(){
       //window.location.href = "cart.html";
     }
 
-    // Enregistrements de certaines valeurs dans un objet
+    /*// Enregistrements de certaines valeurs dans un objet
     const cartSelection = {
       id: urlId,
       color: color,
@@ -107,7 +107,7 @@ function addSelectionCart(){
       let cart = [];
       cart.push(cartSelection);
       localStorage.setItem("cart", JSON.stringify(cart)); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
-    } 
+    } */
     /*const losto = localStorage.length;
     if (losto = 1) {
       localStorage.clear();
@@ -124,28 +124,48 @@ function addSelectionCart(){
       localStorage.setItem("cart2", JSON.stringify(cart));
     }*/
 
-    /*let localStorageP = JSON.parse(localStorage.getItem("cart"));
+   /* let localStorageP = JSON.parse(localStorage.getItem("cart"));
     const cartSelection = {
       id: urlId,
       color: color,
       quantity: Number(quantity)
     }
 
-    if (localStorageP) {
+    /* console.log(localStorageP);
+
+    let localStorag = localStorageP.map(identify => identify.id)
+    console.log(localStorag); */
+    
+
+  /*  if (localStorageP) {
       let azerty = localStorageP.length;
       console.log(azerty);
-      if (localStorageP.length > 0) {
+      let localStoragId = localStorageP.map(identify => identify.id)
+    console.log(localStoragId);
+    let localStoragColor = localStorageP.map(color => color.color)
+    console.log(localStoragColor);
+    let localStoragQuantity = localStorageP.map(quantity => quantity.quantity)
+    console.log(localStoragQuantity);
+      /*if (localStorageP.length > 0) {
         localStorageP.push(cartSelection);
-        localStorage.setItem("cart", JSON.stringify(localStorageP));          
+        localStorage.setItem("cart", JSON.stringify(localStorageP));         
         return
       } */
-      /*if (localStorageP.id == cartSelection.id && localStorageP.color == cartSelection.color) {
-        localStorageP.quantity = localStorageP.quantity + cartSelection.quantity;
+   /*   if (localStoragId == cartSelection.id && cartSelection.color == localStoragColor) {
+        let locStoPQ = localStoragQuantity + cartSelection.quantity;
+        console.log(locStoPQ);
+        localStorageP.push(locStoPQ)
         localStorage.setItem("cart", JSON.stringify(localStorageP));
         return;
-      }*/
+      }
+      else if (localStoragId == cartSelection.id && cartSelection.color != localStoragColor) {
+        localStorageP.push(cartSelection);
+        localStorage.setItem("cart", JSON.stringify(localStorageP));         
+        return
+      }
+    
       return
-  /*  }  else {
+    }  else {
 
       // Enregistrements de certaines valeurs dans un objet
       
@@ -156,7 +176,33 @@ function addSelectionCart(){
         localStorage.setItem("cart", JSON.stringify(cart)); // sur l'article qui est cité dans le guide des étapes clés, il n'y a pas d'écrit window.localStorage.setItem comme dans le cours, mais seulement localStorage.steItem
         
 
-    }*/
+    } */
+
+
+    let localStorageP = JSON.parse(localStorage.getItem("cart"));
+    const cartSelection = {
+      id: urlId,
+      color: color,
+      quantity: Number(quantity)
+    }
+
+    if (localStorageP) {
+      const changeQuantity = localStorageP.find(element => element.id == cartSelection.id && element.color == cartSelection.color);
+      console.log(changeQuantity)
+      if (changeQuantity) {
+        changeQuantity.quantity = changeQuantity.quantity + cartSelection.quantity;
+        localStorage.setItem("cart", JSON.stringify(localStorageP));
+        return
+      }
+      localStorageP.push(cartSelection);
+      localStorage.setItem("cart", JSON.stringify(localStorageP));
+      return
+    } 
+    else {
+      let cart = [];
+      cart.push(cartSelection);
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
 
      
 
