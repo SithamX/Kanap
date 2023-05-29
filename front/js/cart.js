@@ -70,6 +70,7 @@ function viewProductsCart(){
                                 )
 
                         // Appel des fonctions de modification et de suppression d'un produit.
+                        totalQuantityPrice();
                         modifyQuantity();
                         deleteProduct();
                     });
@@ -118,7 +119,7 @@ viewProductsCart();
             localStorage.setItem("cart", JSON.stringify(selectionJson)); 
        
             // La page recharge automatiquement
-            location.reload();
+            location.reload(totalQuantityPrice);
         });
 }  
 
@@ -176,27 +177,15 @@ function totalQuantityPrice() {
         console.log(totalPrice)
 
         // Affichage de la quantité totale sur la page
-        document.querySelector("#totalQuantity").insertAdjacentHTML(
-            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
-            "beforeend",
-            // Création des balises produits
-            `${totalQuantity}` //  `${product.color}`
-        )
+        document.querySelector("#totalQuantity").innerHTML = `${totalQuantity}`;
 
         // Affichage du prix total sur la page
-        document.querySelector("#totalPrice").insertAdjacentHTML(
-            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
-            "beforeend",
-            // Création des balises produits
-            `${totalPrice}` //  `${product.color}`
-        )
+        document.querySelector("#totalPrice").innerHTML = `${totalPrice}`;
     }
     if (selectionJson == 0) {
         localStorage.removeItem('cartPrice');
     }
 }
-totalQuantityPrice();
-
 
 // Fonction faisant fonctionner le formulaire de commande 
 function formulaire() {
@@ -219,7 +208,6 @@ function formulaire() {
 
                 // Caractères autorisés avec une limite minimale et maximale
                 let regexFirstName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
-                // 
                 if (regexFirstName.test(formulaireFirstName)) {
 
                     // Si après avoir eu un message d'erreur qui s'est affiché, le texte saisi est désormais valide au regard du rejex, alors le message d'erreur est caché.
@@ -229,10 +217,7 @@ function formulaire() {
 
                 // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
                 else {
-                    document.querySelector("#firstNameErrorMsg").insertAdjacentHTML(
-                        "beforeend",
-                        "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25)."
-                    )
+                    document.querySelector("#firstNameErrorMsg").innerHTML = "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25).";
 
                     // Si après avoir eu un message d'erreur qui s'est affiché et après avoir corrigé l'erreur, le texte saisi est désormais invalide au regard du rejex (parce que 
                     // l'utilisateur aurait re-modifié ce qu'il y avait dans le formulaire), alors le message d'erreur s'affichera à nouveau.
@@ -255,10 +240,7 @@ function formulaire() {
                 
                 // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
                 else {
-                    document.querySelector("#lastNameErrorMsg").insertAdjacentHTML(
-                        "beforeend",
-                        "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25)."
-                    )
+                    document.querySelector("#lastNameErrorMsg").innerHTML = "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25).";
 
                     // Si après avoir eu un message d'erreur qui s'est affiché et après avoir corrigé l'erreur, le texte saisi est désormais invalide au regard du rejex (parce que 
                     // l'utilisateur aurait re-modifié ce qu'il y avait dans le formulaire), alors le message d'erreur s'affichera à nouveau.
@@ -281,10 +263,8 @@ function formulaire() {
                 
                 // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
                 else {
-                    document.querySelector("#addressErrorMsg").insertAdjacentHTML(
-                        "beforeend",
-                        "Veuillez entrer une adresse valide."
-                    )
+                    document.querySelector("#addressErrorMsg").innerHTML = "Veuillez entrer une adresse valide (ex : 8 Route des Kanap).";
+                    
 
                     // Si après avoir eu un message d'erreur qui s'est affiché et après avoir corrigé l'erreur, le texte saisi est désormais invalide au regard du rejex (parce que 
                     // l'utilisateur aurait re-modifié ce qu'il y avait dans le formulaire), alors le message d'erreur s'affichera à nouveau.
@@ -307,10 +287,7 @@ function formulaire() {
                 
                 // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
                 else {
-                    document.querySelector("#cityErrorMsg").insertAdjacentHTML(
-                        "beforeend",
-                        "Veuillez entrer un nom de ville valide."
-                    )
+                    document.querySelector("#cityErrorMsg").innerHTML = "Veuillez entrer un nom de ville valide.";
 
                     // Si après avoir eu un message d'erreur qui s'est affiché et après avoir corrigé l'erreur, le texte saisi est désormais invalide au regard du rejex (parce que 
                     // l'utilisateur aurait re-modifié ce qu'il y avait dans le formulaire), alors le message d'erreur s'affichera à nouveau.
@@ -333,10 +310,7 @@ function formulaire() {
                 
                 // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
                 else {
-                    document.querySelector("#emailErrorMsg").insertAdjacentHTML(
-                        "beforeend",
-                        "Veuillez entrer une adresse mail valide."
-                    )
+                    document.querySelector("#emailErrorMsg").innerHTML = "Veuillez entrer une adresse mail valide (ex : kanap@panak.com).";
 
                     // Si après avoir eu un message d'erreur qui s'est affiché et après avoir corrigé l'erreur, le texte saisi est désormais invalide au regard du rejex (parce que 
                     // l'utilisateur aurait re-modifié ce qu'il y avait dans le formulaire), alors le message d'erreur s'affichera à nouveau.
