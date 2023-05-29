@@ -18,6 +18,7 @@ function viewProductsCart(){
              " est vide."
             )
         // Formulaire de commande caché
+        document.querySelector(".cart__price").style.display = "none"; 
         document.querySelector(".cart__order").style.display = "none";
     } 
     // Si le localStorage comporte au moins un élément, il s'affiche
@@ -190,6 +191,9 @@ function totalQuantityPrice() {
             `${totalPrice}` //  `${product.color}`
         )
     }
+    if (selectionJson == 0) {
+        localStorage.removeItem('cartPrice');
+    }
 }
 totalQuantityPrice();
 
@@ -215,14 +219,24 @@ function formulaire() {
 
                 // Caractères autorisés avec une limite minimale et maximale
                 let regexFirstName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
+                // 
                 if (regexFirstName.test(formulaireFirstName)) {
-                    return true } 
-                    // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
-                    else {
+
+                    // Si après avoir eu un message d'erreur qui s'est affiché, le texte saisi est désormais valide au regard du rejex, alors le message d'erreur est caché.
+                    document.querySelector("#firstNameErrorMsg").style.display = "none"; 
+                    return true 
+                } 
+
+                // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
+                else {
                     document.querySelector("#firstNameErrorMsg").insertAdjacentHTML(
                         "beforeend",
                         "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25)."
                     )
+
+                    // Si après avoir eu un message d'erreur qui s'est affiché et après avoir corrigé l'erreur, le texte saisi est désormais invalide au regard du rejex (parce que 
+                    // l'utilisateur aurait re-modifié ce qu'il y avait dans le formulaire), alors le message d'erreur s'affichera à nouveau.
+                    document.querySelector("#firstNameErrorMsg").style.display = "block"; 
                 }  
             }
 
@@ -233,6 +247,9 @@ function formulaire() {
                 // Caractères autorisés avec une limite minimale et maximale
                 let regexLastName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
                 if (regexLastName.test(formulaireLastName)) {
+
+                    // Si après avoir eu un message d'erreur qui s'est affiché, le texte saisi est désormais valide au regard du rejex, alors le message d'erreur est caché.
+                    document.querySelector("#lastNameErrorMsg").style.display = "none"; 
                     return true 
                 } 
                 
@@ -242,6 +259,10 @@ function formulaire() {
                         "beforeend",
                         "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25)."
                     )
+
+                    // Si après avoir eu un message d'erreur qui s'est affiché et après avoir corrigé l'erreur, le texte saisi est désormais invalide au regard du rejex (parce que 
+                    // l'utilisateur aurait re-modifié ce qu'il y avait dans le formulaire), alors le message d'erreur s'affichera à nouveau.
+                    document.querySelector("#lastNameErrorMsg").style.display = "block"; 
                 }  
             }
 
@@ -252,6 +273,9 @@ function formulaire() {
                 // Caractères autorisés et dans quel ordre avec une limite minimale et maximale
                 const regexAddress = /^([0-9]{1,} [a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]{5,})$/
                 if (regexAddress.test(formulaireAddress)) {
+
+                    // Si après avoir eu un message d'erreur qui s'est affiché, le texte saisi est désormais valide au regard du rejex, alors le message d'erreur est caché.
+                    document.querySelector("#addressErrorMsg").style.display = "none"; 
                     return true 
                 } 
                 
@@ -261,6 +285,10 @@ function formulaire() {
                         "beforeend",
                         "Veuillez entrer une adresse valide."
                     )
+
+                    // Si après avoir eu un message d'erreur qui s'est affiché et après avoir corrigé l'erreur, le texte saisi est désormais invalide au regard du rejex (parce que 
+                    // l'utilisateur aurait re-modifié ce qu'il y avait dans le formulaire), alors le message d'erreur s'affichera à nouveau.
+                    document.querySelector("#addressErrorMsg").style.display = "block"; 
                 }  
             }
 
@@ -271,6 +299,9 @@ function formulaire() {
                 // Caractères autorisés et dans quel ordre avec une limite minimale et maximale
                 const regexCity = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]){2,}$/
                 if (regexCity.test(formulaireCity)) {
+
+                    // Si après avoir eu un message d'erreur qui s'est affiché, le texte saisi est désormais valide au regard du rejex, alors le message d'erreur est caché.
+                    document.querySelector("#cityErrorMsg").style.display = "none"; 
                     return true 
                 } 
                 
@@ -280,6 +311,10 @@ function formulaire() {
                         "beforeend",
                         "Veuillez entrer un nom de ville valide."
                     )
+
+                    // Si après avoir eu un message d'erreur qui s'est affiché et après avoir corrigé l'erreur, le texte saisi est désormais invalide au regard du rejex (parce que 
+                    // l'utilisateur aurait re-modifié ce qu'il y avait dans le formulaire), alors le message d'erreur s'affichera à nouveau.
+                    document.querySelector("#cityErrorMsg").style.display = "block"; 
                 }  
             }
 
@@ -290,6 +325,9 @@ function formulaire() {
                 // Caractères autorisés et dans quel ordre avec une limite minimale et maximale      
                 const regexEmail = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ_.-]{3,}[@]{1}[a-z]+[.]{1}[a-z]{2,})$/
                 if (regexEmail.test(formulaireEmail)) {
+
+                    // Si après avoir eu un message d'erreur qui s'est affiché, le texte saisi est désormais valide au regard du rejex, alors le message d'erreur est caché.
+                    document.querySelector("#emailErrorMsg").style.display = "none"; 
                     return true 
                 } 
                 
@@ -299,6 +337,10 @@ function formulaire() {
                         "beforeend",
                         "Veuillez entrer une adresse mail valide."
                     )
+
+                    // Si après avoir eu un message d'erreur qui s'est affiché et après avoir corrigé l'erreur, le texte saisi est désormais invalide au regard du rejex (parce que 
+                    // l'utilisateur aurait re-modifié ce qu'il y avait dans le formulaire), alors le message d'erreur s'affichera à nouveau.
+                    document.querySelector("#emailErrorMsg").style.display = "block"; 
                 }  
             }
 
