@@ -6,6 +6,8 @@ let products = [];
 // Création d'un tableau qui sera rempli dans le fonction viewProductsCart() et qui sera utilisé en dehors d'elle, dans la fonction totalQuantityPrice()
 let productsId = [];
 
+let productPriceQuantity = [];
+
 
 // Fonction permettant d'afficher les produits dans le panier
 function viewProductsCart(){
@@ -30,13 +32,6 @@ function viewProductsCart(){
                 .then(response => response.json())
                 .then((prod) => {
 
-                    // Ajout du prix d'un produit spécifique dans le tableau productsId et dans une autre key dans le localStorage 
-                    // pour l'utiliser dans la fonction qui calculera le prix total
-                    product.price = prod.price
-                    console.log(product)
-                    productsId.push(product); 
-                    console.log(productsId)
-                    localStorage.setItem("cartPrice", JSON.stringify(productsId));
                     
                     // Ajout de l'id dans le tableau qui sera utilisé pour le fetch POST
                     products.push(product.id); // je crois que ça ne sert à rien puisque même en le retirant j'ai quand-même l'id qui s'affiche dans l'url de la page de confirmation, quoique, je le laisse quand-même puisque c'est ce qui est demanbdé à la fin des Spécifications techniques du projet
@@ -69,6 +64,13 @@ function viewProductsCart(){
                                     </article>`
                                 )
 
+                                const priceQauntity = {
+                                    price: prod.price,
+                                    quantity: product.quantity,
+                                } 
+                                productPriceQuantity.push(priceQauntity);
+                                console.log(productPriceQuantity)
+
                         // Appel des fonctions de modification et de suppression d'un produit.
                         totalQuantityPrice();
                         modifyQuantity();
@@ -89,6 +91,12 @@ viewProductsCart();
 
             // Récupération de nouvelle valeur sélectionée sur l'élément précis sur lequel l'évènement s'est prduit grâce à event.target
             let inputsValue = event.target.value;
+            
+            // Condition qui affiche une alerte si la quantité saisie est inférieure à 0 ou suprérieure à 100
+            if (inputsValue < 0 || inputsValue > 100) {
+                alert("Veuillez choisir une quantitée entre 1 et 100.");
+                return;
+            }
 
             // Récupération de la balise article sur l'élément précis sur lequel l'évènement s'est prduit grâce à event.target
             const article = event.target.closest("article");
@@ -118,8 +126,8 @@ viewProductsCart();
             // Le nouveau tableau est envoyé dans le localStorage
             localStorage.setItem("cart", JSON.stringify(selectionJson)); 
        
-            // La page recharge automatiquement
-            location.reload(totalQuantityPrice);
+            // Appel de la fonction pour mettre à jour le prix total
+            totalQuantityPrice()
         });
 }  
 
@@ -152,28 +160,25 @@ function deleteProduct(){
             // Ajout du nouveau tableau dans le local storage (ce qui à pour effet de retirer le tableau précédemment supprimé)
             localStorage.setItem("cart", JSON.stringify(quantits));
 
-            // Rechargement automatique de la page
-            location.reload();
+            // Appel de la fonction pour mettre à jour le prix total
+            totalQuantityPrice()
         });
 }
 
-// Création de la fonction permettant de calculer le total de quantité et du prix
+/*// Création de la fonction permettant de calculer le total de quantité et du prix
 function totalQuantityPrice() {
   
-    // Récupération des données dans le localStoage
-    let selectionJsonQuantityPrice = JSON.parse(localStorage.getItem("cartPrice"));
-    console.log(selectionJsonQuantityPrice)
 
-    // Si le localStorage n'était pas vide, alors on calcule la quantité et le prix
-    if (selectionJsonQuantityPrice != null) {
+    // Si le tableau n'était pas vide, alors on calcule la quantité et le prix
+    if (productPriceQuantity != null) {
 
-        // Utilisation de la méthode .map pour récupérer la quantité du (ou des) prduit(s) qui étaient dans le localStorage 
+        // Utilisation de la méthode .map pour récupérer la quantité du (ou des) prduit(s) qui étaient dans le tableau 
         // Puis utilisation de la méthode .reduce à ce moment pour calculer la somme des quantités qui sera affichée sur la page avant le prix
-        const totalQuantity = selectionJsonQuantityPrice.map(quantite => quantite.quantity).reduce((prev, curr) => prev + curr, 0);
+        const totalQuantity = productPriceQuantity.map(item => item.quantity).reduce((prev, curr) => prev + curr, 0);
         console.log(totalQuantity )
     
         // Utilisation de la méthode .reduce pour calculer le résultat du prix multiplié par la quantité
-        const totalPrice = selectionJsonQuantityPrice.reduce((total, item) => total + item.price * item.quantity, 0);
+        const totalPrice = productPriceQuantity.reduce((total, item) => total + item.price * item.quantity, 0);
         console.log(totalPrice)
 
         // Affichage de la quantité totale sur la page
@@ -182,10 +187,42 @@ function totalQuantityPrice() {
         // Affichage du prix total sur la page
         document.querySelector("#totalPrice").innerHTML = `${totalPrice}`;
     }
-    if (selectionJson == 0) {
-        localStorage.removeItem('cartPrice');
+    
+} */
+// Création de la fonction permettant de calculer le total de quantité et du prix
+function totalQuantityPrice() {
+
+    // Création de variables pour la quantité et le prix
+    let totalQuantity = 0;
+    let totalPrice = 0;
+
+    // Création d'une boucle for pour récupérer la quantité
+    for (let product of selectionJson) {
+
+        // Utilisation de fetch pour récupérer le prix du (ou des) produit(s) présent(s) sur la page
+        fetch(`http://localhost:3000/api/products/${product.id}`)
+        .then(response => response.json())
+        .then((prod) => {
+
+            // Récupération du prix et de la quantité
+            const price = prod.price;
+            const quantity = product.quantity;
+
+            // Calcul du total
+            const productTotalPrice = price * quantity;
+
+            // Mise à jour le total de la quantité en ajoutant la quantité actuelle grâce à l'opérateur d'incrémentation
+            totalQuantity += quantity;
+
+            // Mise à jour le prix total en ajoutant le prix total du produit actuel grâce à l'opérateur d'incrémentation
+            totalPrice += productTotalPrice;
+
+            // Affichage de la quantité totale et du prix total sur la page
+            document.querySelector("#totalQuantity").innerHTML = totalQuantity;
+            document.querySelector("#totalPrice").innerHTML = totalPrice;
+        });
     }
-}
+} 
 
 // Fonction faisant fonctionner le formulaire de commande 
 function formulaire() {

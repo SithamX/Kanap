@@ -58,26 +58,24 @@ function data(product){
 
 // Création d'une fonction permettant d'ajouter un article au panier
 function addSelectionCart(){
-  const productSelection = document.querySelector("#addToCart");
+    const productSelection = document.querySelector("#addToCart");
 
-  // Appel de la fonction addSelectionCart après un clique 
-  productSelection.addEventListener("click", () => {
-    const color = document.querySelector("#colors").value; // .value ça veut dire que l'on sélectionne la valeur selectionnée, donc la couleur choisie
-    const quantity = document.querySelector("#quantity").value;
+    // Appel de la fonction addSelectionCart après un clique 
+    productSelection.addEventListener("click", () => {
+      const color = document.querySelector("#colors").value; // .value ça veut dire que l'on sélectionne la valeur selectionnée, donc la couleur choisie
+      const quantity = document.querySelector("#quantity").value;
 
-    // Création d'une condition permetant soit d'afficher un message d'erreur, 
-    // soit de rediriger l'utilisateur vers la page panier.
-    if (color == 0 || quantity == 0) {
-      alert("Veuillez choisir une couleur et une quantité.");
+      // Création d'une condition permetant soit d'afficher un message d'erreur, 
+      // soit de rediriger l'utilisateur vers la page panier.
+      if (color == 0 || quantity == 0) {
+        alert("Veuillez choisir une couleur et une quantité.");
+        return;
+      } else if (quantity < 0 || quantity > 100) {
+      alert("Veuillez choisir une quantitée entre 1 et 100.");
       return;
-    } else if (quantity < 0 || quantity > 100) {
-     alert("Veuillez choisir une quantitée entre 1 et 100.");
-     return;
-    } else {
-      window.location.href = "cart.html";
-    }
-
-
+      } else {
+        window.location.href = "cart.html";
+      }
 
     // Création d'un objet contenant l'id, la couleur et la quantité du produit choisi
     const cartSelection = {
