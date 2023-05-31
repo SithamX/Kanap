@@ -3,16 +3,12 @@ let selectionJson = JSON.parse(localStorage.getItem("cart"));
 console.log(selectionJson)
 // Création du tableau qui servira lors du fetch GET
 let products = [];
-// Création d'un tableau qui sera rempli dans le fonction viewProductsCart() et qui sera utilisé en dehors d'elle, dans la fonction totalQuantityPrice()
-let productsId = [];
-
-let productPriceQuantity = [];
 
 
 // Fonction permettant d'afficher les produits dans le panier
 function viewProductsCart(){
     // Ajout d'une condition permettant d'ajouter du texte et de cacher le formulaire de commande si le localStorage est vide 
-    if (selectionJson === null || selectionJson == 0) {
+    if (selectionJson === null || selectionJson === 0 || selectionJson.length === 0) {
         document.querySelector("h1").insertAdjacentHTML(
             // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
             "beforeend",
@@ -31,7 +27,6 @@ function viewProductsCart(){
             fetch(`http://localhost:3000/api/products/${product.id}`)
                 .then(response => response.json())
                 .then((prod) => {
-
                     
                     // Ajout de l'id dans le tableau qui sera utilisé pour le fetch POST
                     products.push(product.id); // je crois que ça ne sert à rien puisque même en le retirant j'ai quand-même l'id qui s'affiche dans l'url de la page de confirmation, quoique, je le laisse quand-même puisque c'est ce qui est demanbdé à la fin des Spécifications techniques du projet
@@ -62,16 +57,9 @@ function viewProductsCart(){
                                             </div>
                                         </div>
                                     </article>`
-                                )
+                                )   
 
-                                const priceQauntity = {
-                                    price: prod.price,
-                                    quantity: product.quantity,
-                                } 
-                                productPriceQuantity.push(priceQauntity);
-                                console.log(productPriceQuantity)
-
-                        // Appel des fonctions de modification et de suppression d'un produit.
+                        // Appel des fonctions de calcul du total, de modification et de suppression d'un produit.
                         totalQuantityPrice();
                         modifyQuantity();
                         deleteProduct();
@@ -80,6 +68,7 @@ function viewProductsCart(){
     }
 }
 viewProductsCart();
+
 
 // Création de la fonction permettant de modifier la quantité d'un produit
  function modifyQuantity(){
@@ -108,12 +97,9 @@ viewProductsCart();
             const color = article.dataset.color;
             console.log(color)
 
-            // Récupération des données dans le localStorage
-            let carts = JSON.parse(localStorage.getItem("cart"));
-
             // Utilisation de la méthode .map pour créer un nouveau tableau à partir de la récupération 
             // des données dans le localStorage qui comportera la nouvelle quantité
-            carts = selectionJson.map((item => {
+            selectionJson = selectionJson.map((item => {
                 console.log(item.quantity)
                 // Si l'id et la couleur sont les mêmes entre ce qu'il y avait dans le localStorage et entre le produit 
                 // dont on change la quantité, alors la nouvelle valeur rentrée remplacera celle qu'il y avait dans le tableau récupéré du localStorage
@@ -131,6 +117,7 @@ viewProductsCart();
         });
 }  
 
+
 // Création de la fonction permettant de supprimer un produit
 function deleteProduct(){
     let deleteItem = document.querySelector(".deleteItem");
@@ -141,54 +128,31 @@ function deleteProduct(){
             event.preventDefault()
 
             // Récupération de la balise article du produit qui à précisément été cliquée grâce à event.target
-            const idTest = event.target.closest("article");
-            console.log(idTest)
+            const closestArticle = event.target.closest("article");
+            console.log(closestArticle)
 
             // Récupération du data-id et du data-color de la balise article 
-            const id = idTest.dataset.id;
-            const color = idTest.dataset.color;
-
-            // Récupération des données dans le localStorage
-            let quantits = JSON.parse(localStorage.getItem("cart"));
-            console.log(quantits)   
+            const id = closestArticle.dataset.id;
+            const color = closestArticle.dataset.color;  
 
             // Utilisation de la méthode filter() pour retourner un tableau qui ne contiendra pas le produit cliqué,
             // et en précision de filtrage, on retire du tableau l'objet ayant le même id et la même couleur que celui du produit dont on à cliqué sur "Supprimer"
-            quantits = quantits.filter(item => !(item.id === id && item.color === color));
-            console.log(quantits)
+            selectionJson = selectionJson.filter(item => !(item.id === id && item.color === color));
+            console.log(selectionJson)
 
             // Ajout du nouveau tableau dans le local storage (ce qui à pour effet de retirer le tableau précédemment supprimé)
-            localStorage.setItem("cart", JSON.stringify(quantits));
+            localStorage.setItem("cart", JSON.stringify(selectionJson));
 
             // Appel de la fonction pour mettre à jour le prix total
-            totalQuantityPrice()
+            totalQuantityPrice();
+
+            // Utilisation de la méthode remove pour retirer le produit du DOM (donc ici on retire visuellement de la page la 
+            // balise article sur laquelle on à cliqué sur supprimer après qu'elle ait été retirée du localStorage)
+            closestArticle.remove();
         });
 }
 
-/*// Création de la fonction permettant de calculer le total de quantité et du prix
-function totalQuantityPrice() {
-  
 
-    // Si le tableau n'était pas vide, alors on calcule la quantité et le prix
-    if (productPriceQuantity != null) {
-
-        // Utilisation de la méthode .map pour récupérer la quantité du (ou des) prduit(s) qui étaient dans le tableau 
-        // Puis utilisation de la méthode .reduce à ce moment pour calculer la somme des quantités qui sera affichée sur la page avant le prix
-        const totalQuantity = productPriceQuantity.map(item => item.quantity).reduce((prev, curr) => prev + curr, 0);
-        console.log(totalQuantity )
-    
-        // Utilisation de la méthode .reduce pour calculer le résultat du prix multiplié par la quantité
-        const totalPrice = productPriceQuantity.reduce((total, item) => total + item.price * item.quantity, 0);
-        console.log(totalPrice)
-
-        // Affichage de la quantité totale sur la page
-        document.querySelector("#totalQuantity").innerHTML = `${totalQuantity}`;
-
-        // Affichage du prix total sur la page
-        document.querySelector("#totalPrice").innerHTML = `${totalPrice}`;
-    }
-    
-} */
 // Création de la fonction permettant de calculer le total de quantité et du prix
 function totalQuantityPrice() {
 
@@ -222,7 +186,16 @@ function totalQuantityPrice() {
             document.querySelector("#totalPrice").innerHTML = totalPrice;
         });
     }
+
+    // Condition qui retire l'affichage du dernier produit présent dans le localStorage en le remplaçant par un zéro (au moins on est sûrs qu'il ne restera pas affiché), 
+    // puis qui fait appel à la fonction dans laquelle il y a la condition qui cache le total et le formulaire de commande si le localStorage est vide (ce qui sert si le dernier article présent dans le panier est supprimé)
+    if (selectionJson === null || selectionJson.length === 0) {
+        document.querySelector("#totalQuantity").innerHTML = "0";
+        document.querySelector("#totalPrice").innerHTML = "0";
+        viewProductsCart();
+    }
 } 
+
 
 // Fonction faisant fonctionner le formulaire de commande 
 function formulaire() {
@@ -238,6 +211,7 @@ function formulaire() {
                 city: document.querySelector("#city").value,
                 email: document.querySelector("#email").value,
             };
+
 
             // Fonction vérifiant la bonne saisie du prénom
             function verifyFirstName() {
@@ -262,6 +236,7 @@ function formulaire() {
                 }  
             }
 
+
             // Fonction vérifiant la bonne saisie du nom de famille
             function verifyLastName() {
                 const formulaireLastName = contact.lastName;
@@ -284,6 +259,7 @@ function formulaire() {
                     document.querySelector("#lastNameErrorMsg").style.display = "block"; 
                 }  
             }
+
 
             // Fonction vérifiant la bonne saisie de l'adresse postale
             function verifyAdress() {
@@ -309,6 +285,7 @@ function formulaire() {
                 }  
             }
 
+
             // Fonction vérifiant la bonne saisie de la ville
             function verifyCity() {
                 const formulaireCity = contact.city;
@@ -331,6 +308,7 @@ function formulaire() {
                     document.querySelector("#cityErrorMsg").style.display = "block"; 
                 }  
             }
+
 
             // Fonction vérifiant la bonne saisie de l'adresse mail
             function verifyEmail() {
@@ -363,8 +341,10 @@ function formulaire() {
                 order();
             }
 
+
             // Variable qui contiendra l'ID de commande
             let orderId = "";
+            
 
             // Fonction mettant en forme les valeurs récupéres pour le localStorage
             function order(){    
