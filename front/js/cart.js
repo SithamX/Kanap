@@ -1,41 +1,41 @@
-// Récupération des données dans le localStorage
+// Récupération des données dans le localStorage.
 let selectionJson = JSON.parse(localStorage.getItem("cart"));
-console.log(selectionJson)
-// Création du tableau qui servira lors du fetch GET
+
+// Création du tableau qui servira lors du fetch GET.
 let products = [];
 
 
-// Fonction permettant d'afficher les produits dans le panier
+// Fonction permettant d'afficher les produits dans le panier.
 function viewProductsCart(){
-    // Ajout d'une condition permettant d'ajouter du texte et de cacher le formulaire de commande si le localStorage est vide 
+    // Ajout d'une condition permettant d'ajouter du texte et de cacher le total et le formulaire de commande si le localStorage est vide.
     if (selectionJson === null || selectionJson === 0 || selectionJson.length === 0) {
         document.querySelector("h1").insertAdjacentHTML(
-            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page
+            // Position du texte à ajouter à l'intérieur de l'élément, donc après le texte "Votre panier" déja présent sur la page.
             "beforeend",
-            // Ajout du texte
+            // Ajout du texte.
              " est vide."
             )
-        // Formulaire de commande caché
+        // Utilisation de style.display pour cacher le total et le formulaire de commande.
         document.querySelector(".cart__price").style.display = "none"; 
         document.querySelector(".cart__order").style.display = "none";
     } 
-    // Si le localStorage comporte au moins un élément, il s'affiche
+    // Si le localStorage comporte au moins un élément, il s'affiche.
     else {
         for (let product of selectionJson) {
 
-            // Récupération des données d'un produit spécifique dans l'API en fonction de son ID 
+            // Récupération des données d'un produit spécifique dans l'API en fonction de son ID.
             fetch(`http://localhost:3000/api/products/${product.id}`)
                 .then(response => response.json())
                 .then((prod) => {
                     
-                    // Ajout de l'id dans le tableau qui sera utilisé pour le fetch POST
-                    products.push(product.id); // je crois que ça ne sert à rien puisque même en le retirant j'ai quand-même l'id qui s'affiche dans l'url de la page de confirmation, quoique, je le laisse quand-même puisque c'est ce qui est demanbdé à la fin des Spécifications techniques du projet
+                    // Ajout de l'id dans le tableau qui sera utilisé pour le fetch POST.
+                    products.push(product.id); 
         
-                                // Ajout du code html permettant d'afficher correctement un produit
+                                // Ajout du code html permettant d'afficher correctement un produit.
                                 document.querySelector("#cart__items").insertAdjacentHTML(
-                                    // Position à l'intérieur de l'élément, après son dernier enfant
+                                    // Position à l'intérieur de l'élément, après son dernier enfant.
                                     "afterbegin",
-                                    // Création des balises produits
+                                    // Création des balises produits.
                                     `<article class="cart__item" data-id="${product.id}" data-color="${product.color}">
                                         <div class="cart__item__img">
                                             <img src="${prod.imageUrl}" alt="Photographie d'un canapé">
@@ -70,125 +70,119 @@ function viewProductsCart(){
 viewProductsCart();
 
 
-// Création de la fonction permettant de modifier la quantité d'un produit
+// Création de la fonction permettant de modifier la quantité d'un produit.
  function modifyQuantity(){
     let inputs = document.querySelector(".itemQuantity");
  
-        // Dès que l'input de quantité subira un changement, alors les actions suivantes seront effectuées
+        // Dès que l'input de quantité subira un changement, alors les actions suivantes seront effectuées.
         inputs.addEventListener("change", (event) => {
             event.preventDefault()
 
-            // Récupération de nouvelle valeur sélectionée sur l'élément précis sur lequel l'évènement s'est prduit grâce à event.target
+            // Récupération de la nouvelle valeur sélectionée sur l'élément précis sur lequel l'évènement s'est prduit grâce à event.target.
             let inputsValue = event.target.value;
             
-            // Condition qui affiche une alerte si la quantité saisie est inférieure à 0 ou suprérieure à 100
+            // Condition qui affiche une alerte si la quantité saisie est inférieure à 0 ou suprérieure à 100.
             if (inputsValue < 0 || inputsValue > 100) {
                 alert("Veuillez choisir une quantitée entre 1 et 100.");
                 return;
             }
 
-            // Récupération de la balise article sur l'élément précis sur lequel l'évènement s'est prduit grâce à event.target
+            // Récupération de la balise article sur l'élément précis sur lequel l'évènement s'est prduit grâce à event.target.
             const article = event.target.closest("article");
-            console.log(article)
 
-            // Récupération du data.id et du data.color de la balise article
+            // Récupération du data.id et du data.color de la balise article.
             const id = article.dataset.id;
-            console.log(id)
             const color = article.dataset.color;
-            console.log(color)
 
             // Utilisation de la méthode .map pour créer un nouveau tableau à partir de la récupération 
-            // des données dans le localStorage qui comportera la nouvelle quantité
+            // des données dans le localStorage qui comportera la nouvelle quantité.
             selectionJson = selectionJson.map((item => {
-                console.log(item.quantity)
+
                 // Si l'id et la couleur sont les mêmes entre ce qu'il y avait dans le localStorage et entre le produit 
-                // dont on change la quantité, alors la nouvelle valeur rentrée remplacera celle qu'il y avait dans le tableau récupéré du localStorage
+                // dont on change la quantité, alors la nouvelle valeur rentrée remplacera celle qu'il y avait dans le tableau récupéré du localStorage.
                 if (item.id == id && item.color == color) {
                    item.quantity = Number(inputsValue);
                 }
                 return item;
             }));
             
-            // Le nouveau tableau est envoyé dans le localStorage
+            // Le nouveau tableau est envoyé dans le localStorage.
             localStorage.setItem("cart", JSON.stringify(selectionJson)); 
        
-            // Appel de la fonction pour mettre à jour le prix total
+            // Appel de la fonction pour mettre à jour le prix total.
             totalQuantityPrice()
         });
 }  
 
 
-// Création de la fonction permettant de supprimer un produit
+// Création de la fonction permettant de supprimer un produit.
 function deleteProduct(){
     let deleteItem = document.querySelector(".deleteItem");
     
         // Dès que le bouton "Supprimer" sera cliqué, alors les actions suivantes seront effectuées
         deleteItem.addEventListener("click", (event) => {
-            // Annulation du comportement par défaut
             event.preventDefault()
 
-            // Récupération de la balise article du produit qui à précisément été cliquée grâce à event.target
+            // Récupération de la balise article du produit qui à précisément été cliquée grâce à event.target.
             const closestArticle = event.target.closest("article");
-            console.log(closestArticle)
 
-            // Récupération du data-id et du data-color de la balise article 
+            // Récupération du data-id et du data-color de la balise article. 
             const id = closestArticle.dataset.id;
             const color = closestArticle.dataset.color;  
 
             // Utilisation de la méthode filter() pour retourner un tableau qui ne contiendra pas le produit cliqué,
-            // et en précision de filtrage, on retire du tableau l'objet ayant le même id et la même couleur que celui du produit dont on à cliqué sur "Supprimer"
+            // et en précision de filtrage, on retire du tableau l'objet ayant le même id et la même couleur que celui du produit dont on à cliqué sur "Supprimer".
             selectionJson = selectionJson.filter(item => !(item.id === id && item.color === color));
-            console.log(selectionJson)
 
-            // Ajout du nouveau tableau dans le local storage (ce qui à pour effet de retirer le tableau précédemment supprimé)
+            // Ajout du nouveau tableau dans le local storage (ce qui à pour effet de retirer le tableau précédemment supprimé).
             localStorage.setItem("cart", JSON.stringify(selectionJson));
 
-            // Appel de la fonction pour mettre à jour le prix total
+            // Appel de la fonction pour mettre à jour le prix total.
             totalQuantityPrice();
 
             // Utilisation de la méthode remove pour retirer le produit du DOM (donc ici on retire visuellement de la page la 
-            // balise article sur laquelle on à cliqué sur supprimer après qu'elle ait été retirée du localStorage)
+            // balise article sur laquelle on à cliqué sur supprimer après qu'elle ait été retirée du localStorage).
             closestArticle.remove();
         });
 }
 
 
-// Création de la fonction permettant de calculer le total de quantité et du prix
+// Création de la fonction permettant de calculer le total de la quantité et du prix.
 function totalQuantityPrice() {
 
-    // Création de variables pour la quantité et le prix
+    // Création de variables pour la quantité et le prix.
     let totalQuantity = 0;
     let totalPrice = 0;
 
-    // Création d'une boucle for pour récupérer la quantité
+    // Création d'une boucle for pour récupérer la quantité.
     for (let product of selectionJson) {
 
-        // Utilisation de fetch pour récupérer le prix du (ou des) produit(s) présent(s) sur la page
+        // Utilisation de fetch pour récupérer le prix du (ou des) produit(s) présent(s) sur la page.
         fetch(`http://localhost:3000/api/products/${product.id}`)
         .then(response => response.json())
         .then((prod) => {
 
-            // Récupération du prix et de la quantité
+            // Récupération du prix et de la quantité.
             const price = prod.price;
             const quantity = product.quantity;
 
-            // Calcul du total
+            // Calcul du total.
             const productTotalPrice = price * quantity;
 
-            // Mise à jour le total de la quantité en ajoutant la quantité actuelle grâce à l'opérateur d'incrémentation
+            // Met à jour le total de la quantité en ajoutant la quantité actuelle grâce à l'opérateur d'incrémentation.
             totalQuantity += quantity;
 
-            // Mise à jour le prix total en ajoutant le prix total du produit actuel grâce à l'opérateur d'incrémentation
+            // Met à jour le prix total en ajoutant le prix total du produit actuel grâce à l'opérateur d'incrémentation.
             totalPrice += productTotalPrice;
 
-            // Affichage de la quantité totale et du prix total sur la page
+            // Affichage de la quantité totale et du prix total sur la page.
             document.querySelector("#totalQuantity").innerHTML = totalQuantity;
             document.querySelector("#totalPrice").innerHTML = totalPrice;
         });
     }
 
-    // Condition qui retire l'affichage du dernier produit présent dans le localStorage en le remplaçant par un zéro (au moins on est sûrs qu'il ne restera pas affiché), 
-    // puis qui fait appel à la fonction dans laquelle il y a la condition qui cache le total et le formulaire de commande si le localStorage est vide (ce qui sert si le dernier article présent dans le panier est supprimé)
+    // Condition qui retire l'affichage du dernier prix présent dans le localStorage en le remplaçant par un zéro (au moins on est sûrs qu'il ne restera pas affiché), 
+    // puis qui fait appel à la fonction dans laquelle il y a la condition qui cache le total et le formulaire de commande si le localStorage est vide (ce qui sert si le dernier article présent dans le panier est supprimé).
     if (selectionJson === null || selectionJson.length === 0) {
         document.querySelector("#totalQuantity").innerHTML = "0";
         document.querySelector("#totalPrice").innerHTML = "0";
@@ -197,13 +191,13 @@ function totalQuantityPrice() {
 } 
 
 
-// Fonction faisant fonctionner le formulaire de commande 
+// Fonction faisant fonctionner le formulaire de commande.
 function formulaire() {
     const formulaireCommande = document.querySelector("#order");
         formulaireCommande.addEventListener("click", (event) => {
             event.preventDefault();
 
-            // Création d'un objet qui permettra de faire appel efficacement à chaque input ayant une valeur saisie
+            // Création d'un objet qui permettra de faire appel efficacement à chaque input ayant une valeur saisie.
             const contact = {
                 firstName: document.querySelector("#firstName").value,
                 lastName: document.querySelector("#lastName").value,
@@ -213,11 +207,11 @@ function formulaire() {
             };
 
 
-            // Fonction vérifiant la bonne saisie du prénom
+            // Fonction vérifiant la bonne saisie du prénom.
             function verifyFirstName() {
                 const formulaireFirstName = contact.firstName;
 
-                // Caractères autorisés avec une limite minimale et maximale
+                // Caractères autorisés avec une limite minimale et maximale.
                 let regexFirstName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
                 if (regexFirstName.test(formulaireFirstName)) {
 
@@ -226,7 +220,7 @@ function formulaire() {
                     return true 
                 } 
 
-                // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
+                // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche.
                 else {
                     document.querySelector("#firstNameErrorMsg").innerHTML = "Veuillez entrer un caractère valide ou un nombre de caractères valide (de 3-25).";
 
@@ -237,11 +231,11 @@ function formulaire() {
             }
 
 
-            // Fonction vérifiant la bonne saisie du nom de famille
+            // Fonction vérifiant la bonne saisie du nom de famille.
             function verifyLastName() {
                 const formulaireLastName = contact.lastName;
 
-                // Caractères autorisés avec une limite minimale et maximale
+                // Caractères autorisés avec une limite minimale et maximale.
                 let regexLastName = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ -]){3,25}$/
                 if (regexLastName.test(formulaireLastName)) {
 
@@ -261,11 +255,11 @@ function formulaire() {
             }
 
 
-            // Fonction vérifiant la bonne saisie de l'adresse postale
+            // Fonction vérifiant la bonne saisie de l'adresse postale.
             function verifyAdress() {
                 const formulaireAddress = contact.address;
 
-                // Caractères autorisés et dans quel ordre avec une limite minimale et maximale
+                // Caractères autorisés et dans quel ordre avec une limite minimale et maximale.
                 const regexAddress = /^([0-9]{1,} [a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]{5,})$/
                 if (regexAddress.test(formulaireAddress)) {
 
@@ -274,7 +268,7 @@ function formulaire() {
                     return true 
                 } 
                 
-                // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
+                // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche.
                 else {
                     document.querySelector("#addressErrorMsg").innerHTML = "Veuillez entrer une adresse valide (ex : 8 Route des Kanap).";
                     
@@ -286,11 +280,11 @@ function formulaire() {
             }
 
 
-            // Fonction vérifiant la bonne saisie de la ville
+            // Fonction vérifiant la bonne saisie de la ville.
             function verifyCity() {
                 const formulaireCity = contact.city;
 
-                // Caractères autorisés et dans quel ordre avec une limite minimale et maximale
+                // Caractères autorisés et dans quel ordre avec une limite minimale et maximale.
                 const regexCity = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ '-]){2,}$/
                 if (regexCity.test(formulaireCity)) {
 
@@ -299,7 +293,7 @@ function formulaire() {
                     return true 
                 } 
                 
-                // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche
+                // Si le texte saisi n'est pas en accord avec le regex, un message d'erreur s'affiche.
                 else {
                     document.querySelector("#cityErrorMsg").innerHTML = "Veuillez entrer un nom de ville valide.";
 
@@ -310,11 +304,11 @@ function formulaire() {
             }
 
 
-            // Fonction vérifiant la bonne saisie de l'adresse mail
+            // Fonction vérifiant la bonne saisie de l'adresse mail.
             function verifyEmail() {
                 const formulaireEmail = contact.email;           
 
-                // Caractères autorisés et dans quel ordre avec une limite minimale et maximale      
+                // Caractères autorisés et dans quel ordre avec une limite minimale et maximale.   
                 const regexEmail = /^([a-zA-ZéèëêçàâäîïìùûüÀÈÉ_.-]{3,}[@]{1}[a-z]+[.]{1}[a-z]{2,})$/
                 if (regexEmail.test(formulaireEmail)) {
 
@@ -333,23 +327,23 @@ function formulaire() {
                 }  
             }
 
-            // Si toutes les valeurs insérées par l'utilisateur dans les champs sont bonnes, elles sont envoyées dans le localStorage
+            // Si toutes les valeurs insérées par l'utilisateur dans les champs sont bonnes, elles sont envoyées dans le localStorage.
             if (verifyFirstName() && verifyLastName() && verifyAdress() && verifyCity() && verifyEmail()) {
                 localStorage.setItem("contact", JSON.stringify(contact));
 
-                // Appel de la fonction qui met les valeurs récupéres en forme pour le localStorage
+                // Appel de la fonction qui met les valeurs récupéres en forme pour le localStorage.
                 order();
             }
 
 
-            // Variable qui contiendra l'ID de commande
+            // Variable qui contiendra l'ID de commande.
             let orderId = "";
             
 
-            // Fonction mettant en forme les valeurs récupéres pour le localStorage
+            // Fonction mettant en forme les valeurs récupéres pour le localStorage.
             function order(){    
                 
-                // Ici j'envoi des données vers l'API grâce à la requête fetch POST
+                // Ici j'envoi des données vers l'API grâce à la requête fetch POST.
                 fetch("http://localhost:3000/api/products/order", {
                     method: "POST",
                     body: JSON.stringify({contact, products}),
@@ -359,7 +353,7 @@ function formulaire() {
                 })
                 .then((response) => response.json())
                 .then((data) => {
-                    // Ajout de l'orderId dans la variable et renvoi vers la page de confirmation qui contiendra l'identifiant de commande à la fin de l'url
+                    // Ajout de l'orderId dans la variable et renvoi vers la page de confirmation qui contiendra l'identifiant de commande à la fin de l'url.
                     orderId = data.orderId;
                     location.href = "confirmation.html?id=" + orderId;        
                 })
