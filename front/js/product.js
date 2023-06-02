@@ -71,7 +71,7 @@ function addSelectionCart(){
         alert("Veuillez choisir une couleur et une quantité.");
         return;
       } else if (quantity < 0 || quantity > 100) {
-      alert("Veuillez choisir une quantitée entre 1 et 100.");
+      alert("Veuillez choisir une quantité entre 1 et 100.");
       return;
       } else {
         window.location.href = "cart.html";
